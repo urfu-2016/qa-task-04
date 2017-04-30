@@ -60,6 +60,6 @@ describe('showTweets', () => {
     stdoutRes.forEach(el => {
       assert(stdout.calledWith(el));
     });
-    assert(stdout.callCount, 14);
+    assert(stdout.callCount, stdoutRes.length);
   });
 });
