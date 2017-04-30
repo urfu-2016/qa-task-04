@@ -16,12 +16,11 @@ const mockTweets = [
 ]
 
 describe('showTweets', () => {
-
   let clock;
 
   beforeEach(function () {
     clock = sinon.useFakeTimers();
-    clock.setTimeout = (cb) => {cb()}
+    clock.setTimeout = (cb) => {cb()};
   });
 
   afterEach(() => {
@@ -42,11 +41,25 @@ describe('showTweets', () => {
       './formatDate': formatDate,
     });
     await showTweets();
+    const stdoutRes = [
+      '15:09\n',
+      't',
+      'e',
+      's',
+      't',
+      '1',
+      '\n',
+      '25 апреля 2016 в 15:09\n',
+      't',
+      'e',
+      's',
+      't',
+      '2',
+      '\n',
+    ]
+    stdoutRes.forEach(el => {
+      assert(stdout.calledWith(el));
+    });
     assert(stdout.callCount, 14);
-    // assert(log.callCount, 4);
-    // assert(log.calledWith('15:09'));
-    // assert(log.calledWith('test1\n'));
-    // assert(log.calledWith('25 апреля 2016 в 15:09'));
-    // assert(log.calledWith('test2\n'));
   });
 });
