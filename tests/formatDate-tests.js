@@ -1,59 +1,60 @@
 'use strict';
 
 const assert = require('assert');
-const proxyquire = require('proxyquire');
+const sinon = require('sinon');
 const formatDate = require('../formatDate');
+
+const date = new Date(2017, 2, 25, 15, 9);
 
 describe('formatDate', () => {
     it('should return only time if message was written today', () => {
-        const date = new Date();
-        date.setHours(date.getHours() - 1);
-        date.setMinutes(9);
+        const noZerosDate = new Date(2017, 2, 25, 15, 10);
+        const clock = sinon.useFakeTimers(new Date(2017, 2, 25, 16).getTime());
+        assert.equal(formatDate(noZerosDate.toString()), '15:10');
+        clock.restore();
+    });
 
-        assert.equals(formatDate(date.toString()), date.getHours() + ':09');
+    it('should format hours with zero', () => {
+        const zeroHours = new Date(2017, 2, 25, 9, 10);
+        const clock = sinon.useFakeTimers(new Date(2017, 2, 25, 16).getTime());
+        assert.equal(formatDate(zeroHours.toString()), '09:10');
+        clock.restore();
+    });
+
+    it('should format minutes with zero', () => {
+        const clock = sinon.useFakeTimers(new Date(2017, 2, 25, 16).getTime());
+        assert.equal(formatDate(date.toString()), '15:09');
+        clock.restore();
     });
 
     it('should format yesterday date', () => {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        date.setHours(15);
-        date.setMinutes(9);
-
-        assert.equals(formatDate(date.toString()), 'вчера в 15:09');
+        const clock = sinon.useFakeTimers(new Date(2017, 2, 26).getTime());
+        assert.equal(formatDate(date.toString()), 'вчера в 15:09');
+        clock.restore();
     });
 
     it('should format this year tweets', () => {
-        const date = new Date(2017, 2, 15, 9)
-        const now = proxyquire('../formatDate', {
-            './now': () => new Date(2017, 4)
-        });
-
-        assert.equals(formatDate(date.toString()), '25 марта в 15:09');
+        const clock = sinon.useFakeTimers(new Date(2017, 4).getTime());
+        assert.equal(formatDate(date.toString()), '25 марта в 15:09');
+        clock.restore();
     });
 
     it('should format other year tweets', () => {
-        const date = new Date();
-        date.setYear(gate.getYear() - 1);
-        date.setMonth(2);
-        date.setDate(25);
-        date.setHours(15);
-        date.setMinutes(9);
-
-        assert.equals(formatDate(date.toString()), '25 марта в 15:09');
+        const clock = sinon.useFakeTimers(new Date(2018, 0).getTime());
+        assert.equal(formatDate(date.toString()), '25 марта 2017 года в 15:09');
+        clock.restore();
     });
 
     it('should throw error if date is incorrect', () => {
-        const date = 'incorrect date';
-        const cb = () => formatDate(date);
-
+        const incorrectDate = 'incorrect date';
+        const cb = () => formatDate(incorrectDate);
         assert.throws(cb, /Неверный формат даты/);
     });
 
     it('should throw error if date is in future', () => {
-        const date = new Date();
-        date.setDate(date.getDate() + 1);
+        const clock = sinon.useFakeTimers(new Date(2016, 0).getTime());
         const cb = () => formatDate(date);
-
         assert.throws(cb, /Дата ещё не нступила/);
+        clock.restore();
     });
 });
