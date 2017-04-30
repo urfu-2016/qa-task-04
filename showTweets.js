@@ -7,14 +7,14 @@ const twitterUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-tes
 
 const mockTwitterData = [
   {
-    "created_at": "2017-04-30T15:09:10.609Z",
-    "text": "Библиотека #nock позволяет не только удобно писать тесты, но и вести разработку" +
-    " фронтеда, в то время, когда бекенд ещё только проектируется! #urfu-testing-2016"
+    'created_at': '2017-04-30T15:09:10.609Z',
+    'text': 'Библиотека #nock позволяет не только удобно писать тесты, но и вести разработку' +
+    ' фронтеда, в то время, когда бекенд ещё только проектируется! #urfu-testing-2016'
   },
   {
-    "created_at": "2016-04-25T15:09:10.609Z",
-    "text": "Для подмены модулей раньше я использовал #mockery, а сейчас всей душой полюбил" +
-    " #proxyquire. #urfu-testing-2016"
+    'created_at': '2016-04-25T15:09:10.609Z',
+    'text': 'Для подмены модулей раньше я использовал #mockery, а сейчас всей душой полюбил' +
+    ' #proxyquire. #urfu-testing-2016'
   }
 ]
 
@@ -28,7 +28,7 @@ async function printSlowly(text) {
 }
 
 async function printToConsole(tweet) {
-  console.log(formatDate(new Date(tweet.created_at)))
+  console.log(formatDate(new Date(tweet.created_at)));
   await printSlowly(tweet.text);
 }
 
@@ -44,7 +44,7 @@ async function showTweets() {
     { multiArgs: true });
   nock.cleanAll();
   for (let tweet of JSON.parse(body)) {
-    await printToConsole(tweet)
+    await printToConsole(tweet);
   }
 }
 

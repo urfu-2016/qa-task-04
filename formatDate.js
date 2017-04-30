@@ -14,11 +14,11 @@ const MONTHS = [
 ];
 
 function getHoursAndMinutes(date) {
-  return `${formatDateZeros(date.getHours())}:${formatDateZeros(date.getMinutes())}`
+  return `${formatDateZeros(date.getHours())}:${formatDateZeros(date.getMinutes())}`;
 }
 
 function getDayAndMonths(date) {
-  return `${date.getDate()} ${MONTHS[date.getMonth()]}`
+  return `${date.getDate()} ${MONTHS[date.getMonth()]}`;
 }
 
 function formatDateZeros(timeNumber) {
@@ -26,7 +26,7 @@ function formatDateZeros(timeNumber) {
 }
 
 function isEquals(dateNow, date, method) {
-  return dateNow[method]() === date[method]()
+  return dateNow[method]() === date[method]();
 }
 
 function isYesterday(nowDate, date) {
@@ -37,17 +37,17 @@ function isYesterday(nowDate, date) {
 }
 
 function formatDate(date) {
-  const nowDate = new Date()
+  const nowDate = new Date();
   if (date.toDateString() == nowDate.toDateString()) {
-    return getHoursAndMinutes(date)
+    return getHoursAndMinutes(date);
   }
   if (isYesterday(nowDate, date)) {
-    return `вчера в ${getHoursAndMinutes(date)}`
+    return `вчера в ${getHoursAndMinutes(date)}`;
   }
   if (isEquals(nowDate, date, 'getFullYear')) {
     return `${getDayAndMonths(date)} в ${getHoursAndMinutes(date)}`;
   } else {
-    return `${getDayAndMonths(date)} ${date.getFullYear()} года в ${getHoursAndMinutes(date)}`
+    return `${getDayAndMonths(date)} ${date.getFullYear()} года в ${getHoursAndMinutes(date)}`;
   }
 }
 

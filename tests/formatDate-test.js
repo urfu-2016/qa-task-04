@@ -8,7 +8,7 @@ function setHoursAndMinutes(date, hours, mins) {
 }
 
 function setFakeTimer(year, month, day) {
-  return sinon.useFakeTimers(new Date(year,month,day).getTime())
+  return sinon.useFakeTimers(new Date(year,month,day).getTime());
 }
 describe('formatDate', () => {
   describe('"hh:mm" format', () => {
@@ -37,7 +37,7 @@ describe('formatDate', () => {
       setHoursAndMinutes(nowDate, 10, 10);
       nowDate.setDate(nowDate.getDate() - 1);
       assert.equal(formatDate(nowDate), 'вчера в 10:10');
-      clock.restore()
+      clock.restore();
     });
     it('should return "вчера в hh:mm" for 1 January', () => {
       clock = setFakeTimer(2011,0,1);
@@ -45,7 +45,7 @@ describe('formatDate', () => {
       setHoursAndMinutes(nowDate, 10, 10);
       nowDate.setDate(nowDate.getDate() - 1);
       assert.equal(formatDate(nowDate), 'вчера в 10:10');
-      clock.restore()
+      clock.restore();
     });
   })
   describe('"dd month в hh:mm" format', () => {

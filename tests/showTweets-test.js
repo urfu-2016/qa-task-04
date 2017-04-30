@@ -6,12 +6,12 @@ const nock = require('nock');
 
 const mockTweets = [
   {
-    "created_at": "2017-04-30T15:09:10.609Z",
-    "text": "test1"
+    'created_at': '2017-04-30T15:09:10.609Z',
+    'text': 'test1'
   },
   {
-    "created_at": "2016-04-25T15:09:10.609Z",
-    "text": "test2"
+    'created_at': '2016-04-25T15:09:10.609Z',
+    'text': 'test2'
   }
 ]
 
