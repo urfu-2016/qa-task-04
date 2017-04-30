@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "eslint . && mocha tests",
-    "cover": "istanbul cover ./node_modules/.bin/_mocha tests --report text-summary"
+    "cover": "istanbul cover ./node_modules/mocha/bin/_mocha tests --report text-summary"
   },
   "author": "Sergey Zhigalov <zhigalov@yandex-team.ru>",
   "license": "MIT",

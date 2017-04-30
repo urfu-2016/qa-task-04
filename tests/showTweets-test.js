@@ -69,9 +69,19 @@ describe('showTweets', () => {
         });
     });
 
-    // it('should throw error in case of request error', done => {
-    //     // TODO
-    // });
+    it('should throw error in case of request error', done => {
+        const log = sinon.stub(console, 'log');
+        const error = sinon.stub(console, 'error');
+        nock('https://api.twitter.com')
+            .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+            .replyWithError('something happened');
+        const showTweets = require('../showTweets');
+        showTweets(() => {
+            assert(!log.called);
+            assert(error.calledOnce);
+            done();
+        });
+    });
 
     it('should throw error when status code is not 200', done => {
         const log = sinon.stub(console, 'log');
