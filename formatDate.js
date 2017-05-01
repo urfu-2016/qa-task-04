@@ -8,13 +8,13 @@ function formatDate(date) {
     let currentDate = new Date();
     if (currentDate < date)
         throw new Error('Дата твита больше текущей');
-    let tempDate = new Date(date);
-    tempDate = new Date(tempDate.setDate(date.getDate()+1));
+    let yesterdayDate = new Date(currentDate);
+    yesterdayDate.setDate(currentDate.getDate()-1);
     let isThisYear = currentDate.getFullYear() === date.getFullYear();
 
-    let isYesterday = currentDate.getFullYear() === tempDate.getFullYear() &&
-        currentDate.getMonth() === tempDate.getMonth() &&
-        currentDate.getDate()  === tempDate.getDate();
+    let isYesterday = yesterdayDate.getFullYear() === date.getFullYear() &&
+        yesterdayDate.getMonth() === date.getMonth() &&
+        yesterdayDate.getDate()  === date.getDate();
 
     let isToday = currentDate.getFullYear() === date.getFullYear() &&
             currentDate.getMonth() === date.getMonth() &&
