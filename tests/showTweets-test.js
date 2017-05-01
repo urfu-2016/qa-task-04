@@ -97,5 +97,18 @@ describe('showTweets', () => {
                 done();
             });
         });
+        it('should throw error when status code is not 200', done => {
+            const log = sinon.stub(console, 'log');
+            const error = sinon.stub(console, 'error');
+            nock('https://api.twitter.com')
+                .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+                .reply(502, '');
+            const showTweets = require('../showTweets');
+            showTweets(() => {
+                assert(!log.called);
+                assert(error.calledOnce);
+                done();
+            });
+        });
     });
 });
