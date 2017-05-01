@@ -2,9 +2,9 @@ const formatDate = require('./formatDate');
 const nock = require('nock');
 const Promise = require('bluebird');
 const request = require('request');
-const URL = require('url').URL
+const URL = require('url').URL;
 
-const twitterUrl = new URL('https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-2016')
+const twitterUrl = new URL('https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-2016');
 
 const mockTwitterData = [
   {
