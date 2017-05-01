@@ -1,5 +1,4 @@
 const formatDate = require('./formatDate');
-const nock = require('nock');
 const Promise = require('bluebird');
 const request = require('request');
 const URL = require('url').URL;
@@ -30,7 +29,6 @@ async function wait100ms() {
 async function showTweets() {
   let [res, body] = await Promise.fromNode(cb => request.get(twitterUrl.href, cb),
     { multiArgs: true });
-  nock.cleanAll();
   if (!body || res.statusCode !== 200) {
     throw new Error("Incorrect server answer");
   }
