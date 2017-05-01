@@ -10,6 +10,12 @@ function setHoursAndMinutes(date, hours, mins) {
 function setFakeTimer(year, month, day) {
   return sinon.useFakeTimers(new Date(year,month,day).getTime());
 }
+
+function formarDateError(errRegExp, ...args) {
+  const f = () => formatDate(...args);
+  assert.throws(f, errRegExp);
+}
+
 describe('formatDate', () => {
   describe('"hh:mm" format', () => {
     it('should return only hh:mm for today date', () => {
@@ -84,6 +90,22 @@ describe('formatDate', () => {
       nowDate.setFullYear(nowDate.getFullYear() - 1);
       assert.equal(formatDate(nowDate), '21 мая 2010 года в 10:10');
       clock.restore();
+    });
+  });
+  describe('exceptions', () => {
+    it('should return "formatDate take 1 argument" error if not 1 argument', () => {
+      formarDateError(/formatDate take 1 argument/, new Date(), new Date());
+    });
+    it('should return "Invalid date" error if "undefined" in args', () => {
+      formarDateError(/Invalid date/, undefined);
+    });
+    it('should return "Invalid date" error if "abcdef" (incorrect format data) in args', () => {
+      formarDateError(/Invalid date/, 'abcdef');
+    });
+    it('should return "Date must be before current date" error if date after current date', () => {
+      let nowDate = new Date();
+      nowDate.setHours(nowDate.getHours() + 1);
+      formarDateError(/Date must be before current date/, nowDate);
     });
   });
 });

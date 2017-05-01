@@ -37,7 +37,16 @@ function isYesterday(nowDate, date) {
 }
 
 function formatDate(date) {
+  if (arguments.length !== 1) {
+    throw new Error("formatDate take 1 argument");
+  }
+  if (!(date instanceof Date) || !isFinite(date)) {
+    throw new Error("Invalid date");
+  }
   const nowDate = new Date();
+  if (nowDate < date) {
+    throw new Error("Date must be before current date");
+  }
   if (date.toDateString() == nowDate.toDateString()) {
     return getHoursAndMinutes(date);
   }

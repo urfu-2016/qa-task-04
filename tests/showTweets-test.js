@@ -16,50 +16,135 @@ const mockTweets = [
 ]
 
 describe('showTweets', () => {
-  let clock;
-
-  beforeEach(function () {
-    clock = sinon.useFakeTimers();
-    clock.setTimeout = (cb) => {cb()};
-  });
-
-  afterEach(() => {
-    process.stdout.write.restore();
-    nock.cleanAll();
-    clock.restore();
-  });
-
-  it('test console log ', async () => {
-    nock('https://api.twitter.com')
-      .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
-      .reply(200, mockTweets);
-    const stdout = sinon.spy(process.stdout, 'write');
-    const formatDate = sinon.stub();
-    formatDate.withArgs(new Date('2017-04-30T15:09:10.609Z')).returns('15:09');
-    formatDate.withArgs(new Date('2016-04-25T15:09:10.609Z')).returns('25 апреля 2016 в 15:09');
-    const showTweets = proxyquire('../showTweets', {
-      './formatDate': formatDate,
+  describe('stdout tests', ()=>{
+    let clock;
+    beforeEach(function () {
+      clock = sinon.useFakeTimers();
+      clock.setTimeout = (cb) => {
+        clock.tick(100);
+        cb();
+      };
     });
-    await showTweets();
-    const stdoutRes = [
-      '15:09\n',
-      't',
-      'e',
-      's',
-      't',
-      '1',
-      '\n',
-      '25 апреля 2016 в 15:09\n',
-      't',
-      'e',
-      's',
-      't',
-      '2',
-      '\n',
-    ]
-    stdoutRes.forEach(el => {
-      assert(stdout.calledWith(el));
+
+    afterEach(() => {
+      process.stdout.write.restore();
+      nock.cleanAll();
+      clock.restore();
     });
-    assert(stdout.callCount, stdoutRes.length);
+
+    it('should write to stdout by symbol interval by 100ms', async () => {
+      nock('https://api.twitter.com')
+        .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+        .reply(200, mockTweets);
+
+      const stdout = sinon.spy(process.stdout, 'write');
+      const formatDate = sinon.stub();
+      formatDate.withArgs(new Date('2017-04-30T15:09:10.609Z')).returns('15:09');
+      formatDate.withArgs(new Date('2016-04-25T15:09:10.609Z')).returns('25 апреля 2016 в 15:09');
+      const showTweets = proxyquire('../showTweets', {
+        './formatDate': formatDate,
+      });
+      await showTweets();
+      const stdoutRes = [
+        '15:09\n',
+        't',
+        'e',
+        's',
+        't',
+        '1',
+        '\n',
+        '25 апреля 2016 в 15:09\n',
+        't',
+        'e',
+        's',
+        't',
+        '2',
+        '\n',
+      ]
+      stdoutRes.forEach(el => {
+        assert(stdout.calledWith(el));
+      });
+      assert(stdout.callCount, stdoutRes.length);
+    });
+  });
+  describe('exceptions', () => {
+    afterEach(() => {
+      nock.cleanAll();
+    });
+    it('should return "Incorrect server answer" error for 404 status code', async () => {
+      nock('https://api.twitter.com')
+        .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+        .reply(404);
+      try {
+        await showTweets();
+      } catch(e) {
+        assert.equal('Incorrect server answer', e.message);
+      }
+    });
+    it('should return "Incorrect server answer" error for empty body', async () => {
+      nock('https://api.twitter.com')
+        .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+        .reply(200, '');
+      try {
+        await showTweets();
+      } catch(e) {
+        assert.equal('Incorrect server answer', e.message);
+      }
+    });
+    it('should return "Answer from server must be JSON" error for' +
+      ' not JSON response in body', async () => {
+      nock('https://api.twitter.com')
+        .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+        .reply(200, 'not json');
+      try {
+        await showTweets();
+      } catch(e) {
+        assert.equal('Answer from server must be JSON', e.message);
+      }
+    });
+    it('should return "Incorrect format of data..." error ' +
+      'for incorrect tweets json with empty text', async () => {
+      const incorrectTweetsJSON = [
+        {
+          'created_at': '2017-04-30T15:09:10.609Z',
+          'text': ''
+        },
+        {
+          'created_at': '2016-04-25T15:09:10.609Z',
+          'text': 'test2'
+        }
+      ]
+      nock('https://api.twitter.com')
+        .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+        .reply(200, JSON.stringify(incorrectTweetsJSON));
+      try {
+        await showTweets();
+      } catch(e) {
+        assert.equal('Incorrect format of data from server. Need object' +
+          ' {text: String, created_at: Data}', e.message);
+      }
+    });
+    it('should return "Incorrect format of data..." error ' +
+      'for incorrect tweets json with empty date', async () => {
+      const incorrectTweetsJSON = [
+        {
+          'created_at': '',
+          'text': 'test1'
+        },
+        {
+          'created_at': '2016-04-25T15:09:10.609Z',
+          'text': 'test2'
+        }
+      ]
+      nock('https://api.twitter.com')
+        .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+        .reply(200, JSON.stringify(incorrectTweetsJSON));
+      try {
+        await showTweets();
+      } catch(e) {
+        assert.equal('Incorrect format of data from server. Need object' +
+          ' {text: String, created_at: Data}', e.message);
+      }
+    });
   });
 });

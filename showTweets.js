@@ -2,8 +2,9 @@ const formatDate = require('./formatDate');
 const nock = require('nock');
 const Promise = require('bluebird');
 const request = require('request');
+const URL = require('url').URL
 
-const twitterUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-2016'
+const twitterUrl = new URL('https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-2016')
 
 const mockTwitterData = [
   {
@@ -16,11 +17,10 @@ const mockTwitterData = [
     'text': 'Для подмены модулей раньше я использовал #mockery, а сейчас всей душой полюбил' +
     ' #proxyquire. #urfu-testing-2016'
   }
-]
+];
 
 async function printSlowly(text) {
-  text = text.split('')
-  for (const symbol of text) {
+  for (const symbol of text.split('')) {
     await wait100ms();
     process.stdout.write(symbol);
   }
@@ -28,6 +28,10 @@ async function printSlowly(text) {
 }
 
 async function printToConsole(tweet) {
+  if (!tweet || !tweet.text || !tweet.created_at) {
+    throw new Error("Incorrect format of data from server. " +
+      "Need object {text: String, created_at: Data}");
+  }
   console.log(formatDate(new Date(tweet.created_at)));
   await printSlowly(tweet.text);
 }
@@ -37,13 +41,22 @@ async function wait100ms() {
 }
 
 async function showTweets() {
-  nock('https://api.twitter.com')
-    .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+  nock(twitterUrl.origin)
+    .get(`${twitterUrl.pathname}${twitterUrl.search}`)
     .reply(200, JSON.stringify(mockTwitterData));
-  let [, body] = await Promise.fromNode(cb => request.get(twitterUrl, cb),
+  let [res, body] = await Promise.fromNode(cb => request.get(twitterUrl.href, cb),
     { multiArgs: true });
   nock.cleanAll();
-  for (let tweet of JSON.parse(body)) {
+  if (!body || res.statusCode !== 200) {
+    throw new Error("Incorrect server answer");
+  }
+  let parsedBody;
+  try {
+    parsedBody = JSON.parse(body);
+  } catch(e) {
+    throw new Error("Answer from server must be JSON");
+  }
+  for (let tweet of parsedBody) {
     await printToConsole(tweet);
   }
 }
