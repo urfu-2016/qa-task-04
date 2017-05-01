@@ -5,18 +5,11 @@ const chai = require('chai');
 chai.should();
 
 describe('formatDate', () => {
-    it('should return only time when pastDate is today', () => {
+    it('should return only time when pastDate - today', () => {
         let pastDate = new Date(2017, 10, 1, 20, 40);
         let currentDate = new Date(2017, 10, 1, 20, 45);
 
         formatDate(pastDate, currentDate).should.equal('20:40');
-    });
-
-    it('should pad zero in time when hours and minutes one digit', () => {
-        let pastDate = new Date(2017, 10, 1, 9, 0);
-        let currentDate = new Date(2017, 10, 1, 9, 10);
-
-        formatDate(pastDate, currentDate).should.equal('09:00');
     });
 
     it('should prepend `вчера в` when pastDate - yesterday', () => {
@@ -38,6 +31,13 @@ describe('formatDate', () => {
         let currentDate = new Date(2017, 10, 3, 3, 30);
 
         formatDate(pastDate, currentDate).should.equal('2 февраля 2016 года в 10:10');
+    });
+
+    it('should pad zero in time when hours and minutes one digit', () => {
+        let pastDate = new Date(2017, 10, 1, 9, 0);
+        let currentDate = new Date(2017, 10, 1, 9, 10);
+
+        formatDate(pastDate, currentDate).should.equal('09:00');
     });
 
     it('should throws when pastDate > currentDate', () => {

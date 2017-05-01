@@ -14,7 +14,6 @@ describe('searchTweets', () => {
 
     it('should be rejected with StatusCodeError when send invalid token', () => {
         const query = 'some';
-
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q='+query)
             .reply(401);
@@ -25,7 +24,6 @@ describe('searchTweets', () => {
 
     it('should be rejected with RequestError when twitter does not reply', () => {
         const query = 'some';
-
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q='+query)
             .replyWithError('Problem with internet connection');
@@ -36,7 +34,6 @@ describe('searchTweets', () => {
 
     it('should be rejected with SyntaxError when twitter send incorrect JSON', () => {
         const query = 'some';
-
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q='+query)
             .reply(200, 'incorrect JSON');
@@ -47,7 +44,6 @@ describe('searchTweets', () => {
 
     it('should be rejected with SyntaxError when twitter send JSON without field "statuses"', () => {
         const query = 'some';
-
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q='+query)
             .reply(200, '{"this JSON has not field `statuses`":""}');
@@ -59,7 +55,6 @@ describe('searchTweets', () => {
     it('should return all data from reply JSON "statuses" field', () => {
         const query = 'some';
         const statuses = '[{"text": "some tweet 1"}, {"text": "some tweet 2"}]';
-
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q='+query)
             .reply(200, `{"statuses": ${statuses}}`);

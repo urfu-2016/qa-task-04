@@ -3,7 +3,7 @@
 const formatDate = require('./formatDate');
 const twitterApi = require('./twitterApi');
 
-const FAVORITE_HASHTAG = '#urfu-testing-2016';
+const FAVORITE_HASHTAG = '#urfu';
 const ACCESS_TOKEN = 'Hardcode here your access token';
 
 /**
@@ -11,14 +11,14 @@ const ACCESS_TOKEN = 'Hardcode here your access token';
  */
 function showTweets() {
     return twitterApi.searchTweets(FAVORITE_HASHTAG, ACCESS_TOKEN)
-            .catch(() => console.info('Failed to load tweets'))
             .then(tweets => tweets.map(stringifyReadable))
-            .then(tweets => tweets.join('\n'))
-            .then(console.info);
+            .then(tweets => tweets.join('\n\n'))
+            .then(console.log)
+            .catch(() => console.error('Failed to load tweets'));
 }
 
 function stringifyReadable(tweet) {
-    let createdDate = formatDate(tweet['created_at']);
+    let createdDate = formatDate(new Date(tweet['created_at']));
     let text = tweet['text'];
     
     return createdDate + '\n' + text;
