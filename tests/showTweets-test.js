@@ -21,6 +21,7 @@ const mockTweets = [
 describe('showTweets', () => {
   describe('stdout tests', ()=>{
     let clock;
+
     beforeEach(function () {
       clock = sinon.useFakeTimers();
       clock.setTimeout = (cb) => {
@@ -71,9 +72,11 @@ describe('showTweets', () => {
     });
   });
   describe('exceptions', () => {
+
     afterEach(() => {
       nock.cleanAll();
     });
+    
     it('should return "Incorrect server answer" error for 404 status code', async () => {
       nock(twitterUrl.origin)
         .get(`${twitterUrl.pathname}${twitterUrl.search}`)
