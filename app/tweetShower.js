@@ -25,20 +25,25 @@ function showTweetsTicker() {
         prepareTweets()
             .then(tweetsString => {
                 let words = tweetsString.split(/\n| /);
-                function printNext()
-                {
-                    console.log(words[0]);
-                    words.shift();
-                    if (words.length === 0) {
-                        resolve();
-                    } else {
-                        setTimeout(printNext, 200);
-                    }
-                }
-                printNext();
+                printByInterval(words, 200, resolve);
             })
             .catch(reject); 
-    });
+    })
+    .catch(() => console.error('Failed to load tweets'));
+}
+
+
+function printByInterval(words, interval, done) {
+    let wordIndex = 0;
+    function printNext() {
+        if (wordIndex < words.length) {
+            console.log(words[wordIndex++]);
+            setTimeout(printNext, interval); 
+        } else {
+            done();
+        }
+    }
+    printNext();
 }
 
 function prepareTweets() {

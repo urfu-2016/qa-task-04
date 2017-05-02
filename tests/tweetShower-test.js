@@ -60,7 +60,7 @@ describe('showTweetsTicker', () => {
         !console.error.restore || console.error.restore();
     });
     
-    it('magic', () => {
+    it('should print tweets by words', () => {
         const log = sinon.spy(console, 'log');
         const searchTweets = () => Promise.resolve(FAKE_TWEETS);
         const formatDate = () => '15:00';
@@ -68,11 +68,22 @@ describe('showTweetsTicker', () => {
             './twitterApi': { searchTweets: searchTweets },
             './formatDate': formatDate
         });
-
         const expectedWords = ['15:00', 'tweet', '1', '', '15:00', 'tweet', '2'];
 
         return tweetShower.showTweetsTicker().then(() => {
             expectedWords.forEach(word => log.calledWith(word).should.be.true);
         });
     });
+
+    it('should print `Failed to load tweets` if searchTweet rejected', () => {
+        const error = sinon.spy(console, 'error');
+        const searchTweets = () => Promise.reject();
+        const tweetShower = proxyquire('../app/tweetShower', {
+            './twitterApi': { searchTweets: searchTweets },
+        });
+
+        return tweetShower.showTweetsTicker().then(() => {
+            error.calledWith('Failed to load tweets').should.be.true;
+        });
+    })
 });
