@@ -12,10 +12,12 @@
   "devDependencies": {
     "mocha": "3.3.0",
     "nock": "9.0.13",
-    "proxyquire": "1.7.11",
+    "proxyquire": "^1.7.11",
+    "request": "^2.81.0",
     "sinon": "2.1.0"
   },
   "dependencies": {
+    "request-promise": "^4.2.0",
     "request": "2.81.0"
   }
 }
