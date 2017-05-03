@@ -9,6 +9,12 @@ function formatDate(date) {
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
+	if (arguments.length !== 1) {
+		throw new Error("На входе должен быть один аргумент типа Date")
+	}
+	if (!(date instanceof Date)) {
+        throw new Error('Аргумент должен быть типа Date');
+    }
     if (inputDate.toString() === 'Invalid Date') {
         throw new Error('Неправильный формат даты');
     }

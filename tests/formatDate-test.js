@@ -35,8 +35,14 @@ describe('formatDate', () => {
 		today.restore();
     });
 	
-	it('should return `Неправильный формат даты` for "I`m not a date"', () => {
+	it('should return `Аргумент должен быть типа Date` for "I`m not a date"', () => {
         const date = () => formatDate("I'm not a date");
+        
+        assert.throws(date, /Аргумент должен быть типа Date/);
+    });
+	
+	it('should return `Неправильный формат даты` for new Date("I`m not a date")', () => {
+        const date = () => formatDate(new Date("I`m not a date"));
         
         assert.throws(date, /Неправильный формат даты/);
     });
@@ -47,5 +53,19 @@ describe('formatDate', () => {
 		
         assert.throws(date, /Дата не должна быть больше текущей/);
 		today.restore();
+    });
+	
+	it('should return `На входе должен быть один аргумент типа Date` for "(date, date)"', () => {
+		const date1 =  formatDate(new Date(2017, 2, 3, 0, 0, 0, 0));
+		const date2 =  formatDate(new Date(2016, 2, 3, 0, 0, 0, 0));
+        const date = () => formatDate(date1, date2);
+        
+        assert.throws(date, /На входе должен быть один аргумент типа Date/);
+    });
+	
+	it('should return `На входе должен быть один аргумент типа Date` for "()"', () => {
+        const date = () => formatDate();
+        
+        assert.throws(date, /На входе должен быть один аргумент типа Date/);
     });
 });
