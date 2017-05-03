@@ -14,17 +14,17 @@ function formatDate(date) {
     if (date > currentDate) {
         throw new Error('date should not be greater than current date');
     }
-    let dateDate = date.getUTCDate();
-    let dateMonth = date.getUTCMonth();
-    let dateHours = getFormattedNumber(date.getUTCHours());
+    let dateDate = date.getDate();
+    let dateMonth = date.getMonth();
+    let dateHours = getFormattedNumber(date.getHours());
     let dateMinutes = getFormattedNumber(date.getMinutes());
-    if (date.getUTCFullYear() !== currentDate.getUTCFullYear()) {
-        return `${dateDate} ${months[dateMonth]} ${date.getUTCFullYear()} года в ${dateHours}:${dateMinutes}`;
+    if (date.getFullYear() !== currentDate.getFullYear()) {
+        return `${dateDate} ${months[dateMonth]} ${date.getFullYear()} года в ${dateHours}:${dateMinutes}`;
     }
-    if (currentDate.getUTCDate() === dateDate && currentDate.getUTCMonth() === dateMonth) {
+    if (currentDate.getDate() === dateDate && currentDate.getMonth() === dateMonth) {
         return `${dateHours}:${dateMinutes}`;
     }
-    if (currentDate.getUTCMonth() === dateMonth && currentDate.getUTCDate() === dateDate + 1) {
+    if (currentDate.getMonth() === dateMonth && currentDate.getDate() === dateDate + 1) {
         return `вчера в ${dateHours}:${dateMinutes}`;
     }
 
