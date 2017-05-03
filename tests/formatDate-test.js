@@ -1,7 +1,6 @@
 const assert = require('assert');
 const formatDate = require('../formatDate');
 const sinon = require('sinon');
-const proxyquire = require('proxyquire');
 
 function runSuccessTest(date, expected) {
     return () => {
