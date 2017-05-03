@@ -19,19 +19,19 @@ describe('formatDate', () => {
         });
 
         it('should return "вчера в hh:mm" for yesterday date', () => {
-            const yesterdayTime = new Date(2017, 3, 30, 5, 15);
+            const yesterdayTime = new Date(2017, 3, 30, 5, 5);
             clock = sinon.useFakeTimers(new Date(2017, 4, 1, 12).getTime());
             const actual = formateDate(yesterdayTime.toString());
 
-            assert.equal(actual, 'вчера в 05:15');
+            assert.equal(actual, 'вчера в 05:05');
         });
 
         it('should return "dd month в hh:mm" for more day ago date', () => {
-            const dayAgoTime = new Date(2017, 3, 29, 5, 15);
+            const dayAgoTime = new Date(2017, 3, 29, 15, 15);
             clock = sinon.useFakeTimers(new Date(2017, 4, 1, 12).getTime());
             const actual = formateDate(dayAgoTime.toString());
 
-            assert.equal(actual, '29 апреля в 05:15');
+            assert.equal(actual, '29 апреля в 15:15');
         });
 
         it('should return "dd month yy года в hh:mm" for more year ago date', () => {

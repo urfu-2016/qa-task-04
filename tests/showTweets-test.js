@@ -62,6 +62,15 @@ describe('showTweets', () => {
 
     describe('Negative test', () => {
 
+        it('should throw Error if showTweets call with arguments', async() => {
+            try {
+                await showTweets('argument');
+                throw new Error('`showTweets` should throw error');
+            } catch (error) {
+                assert.equal(error.message, "Функция showTweets не принимает аргументы");
+            }
+        });
+
         it('should throw Error if request error', async() => {
             nock(twitterUrl).get(twitterGetQuery)
                 .replyWithError('Error');

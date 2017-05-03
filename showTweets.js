@@ -50,6 +50,10 @@ async function parseTweets(tweets) {
 
 
 async function showTweets() {
+    if (arguments.length) {
+        throw new Error("Функция showTweets не принимает аргументы");
+    }
+
     let response;
     try {
         response = await request.get(twitterQuery);
