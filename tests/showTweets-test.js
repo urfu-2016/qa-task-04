@@ -53,7 +53,7 @@ describe('showTweets', () => {
             showTweets(url, log, error)
             done()
             assert(log.calledTwice)
-            assert(log.calledWith('вчера в 15:09\n' + tweets[0]['text']))
+            assert(log.calledWith('25 апреля в 15:09\n' + tweets[0]['text']))
             assert(log.calledWith('25 апреля 2016 года в 15:10\n' + tweets[1]['text']))
             assert(!error.called)
         });
