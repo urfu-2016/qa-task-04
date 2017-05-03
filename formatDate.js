@@ -32,9 +32,6 @@ function formatDate(date) {
 }
 
 function getFormattedNumber(num) {
-    if (num < 0) {
-        throw new Error('num should be greater than 0');
-    }
     return num < 10 ? `0${num}` : num.toString();
 }
 

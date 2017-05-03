@@ -35,14 +35,6 @@ describe('formatDate', () => {
         todayDate.restore();
     });
 
-    it('should return only time if date is today', () => {
-        let date = new Date(2017, 1, 1, 10, 0);
-        let todayDate = sinon.useFakeTimers(new Date(2017, 1, 1, 15, 0));
-
-        assert.equal(formatDate(date), '10:00');
-        todayDate.restore();
-    });
-
     it('should return `вчера в ` and time if date is yesterday', () => {
         let date = new Date(2017, 1, 1, 10, 0);
         let todayDate = sinon.useFakeTimers(new Date(2017, 1, 2, 15, 0));

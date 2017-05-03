@@ -70,7 +70,7 @@ describe('showTweets', () => {
     it('should print error on console if request error', () => {
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
-            .replyWithError('request error')
+            .replyWithError('request error');
 
         showTweets(() => {
             assert(!consoleLog.called);
