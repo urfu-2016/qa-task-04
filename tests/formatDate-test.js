@@ -54,7 +54,6 @@ describe('formatDate', () => {
         assert.throws(date, /Дата не должна быть больше текущей/);
 	today.restore();
     });
-<<<<<<< HEAD
 	
 	it('should return `На входе должен быть один аргумент типа Date` for "(date, date)"', () => {
 		const date1 =  formatDate(new Date(2017, 2, 3, 0, 0, 0, 0));
@@ -70,6 +69,3 @@ describe('formatDate', () => {
         assert.throws(date, /На входе должен быть один аргумент типа Date/);
     });
 });
-=======
-});
->>>>>>> 98f722d2872d8ded6886c2325212e9c0e2f9c0b8
