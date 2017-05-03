@@ -93,7 +93,7 @@ describe('showTweets', () => {
 	it('should throw error for invalid json', () => {
         const log = sinon.spy(console, 'log');
         const error = sinon.spy(console, 'error');
-		const json =  [{"text": "text"}]
+		const json = 'invalid json';
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
             .reply(200, json);
