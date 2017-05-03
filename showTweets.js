@@ -1,4 +1,4 @@
-"use strict"
+'use strict';
 
 const formatDate = require('./formatDate');
 const request = require('request');
@@ -7,16 +7,18 @@ const request = require('request');
 function showTweets() {
     // Здесь будет код, который получает твиты и
     // выводит их на консоль
-	const url = "https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-2016";
-	request(url, function (error, response, body) {
-		if (error) {
-			console.error(error.message);
-		}
-		if (response.statusCode !== 200) {
-			console.error(response.statusCode);
-		}
-		try {
-			const tweets = JSON.parse(body);
+    const url = "https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-2016";
+    request(url, function (error, response, body) {
+        if (error) {
+            console.error(error.message);
+            return;
+        }
+        if (response.statusCode !== 200) {
+            console.error(response.statusCode);
+            return;
+        }
+        try {
+            const tweets = JSON.parse(body);
             tweets.forEach(tweet => {
                 console.log(formatDate(tweet.created_at));
                 console.log(tweet.text);
@@ -24,6 +26,6 @@ function showTweets() {
         } catch (error) {
             console.error(error);
         }
-	});
+    });
 }
 module.exports = showTweets;
