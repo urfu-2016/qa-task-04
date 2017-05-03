@@ -24,10 +24,6 @@ describe('showTweets', () => {
 
     beforeEach(function () {
       clock = sinon.useFakeTimers();
-      clock.setTimeout = (cb) => {
-        clock.tick(100);
-        cb();
-      };
     });
 
     afterEach(() => {
@@ -48,27 +44,29 @@ describe('showTweets', () => {
       const showTweets = proxyquire('../showTweets', {
         './formatDate': formatDate,
       });
-      await showTweets();
-      const stdoutRes = [
-        '15:09\n',
-        't',
-        'e',
-        's',
-        't',
-        '1',
-        '\n',
-        '25 апреля 2016 в 15:09\n',
-        't',
-        'e',
-        's',
-        't',
-        '2',
-        '\n',
-      ]
-      stdoutRes.forEach(el => {
-        assert(stdout.calledWith(el));
+      showTweets().then(()=> {
+        const stdoutRes = [
+          '15:09\n',
+          't',
+          'e',
+          's',
+          't',
+          '1',
+          '\n',
+          '25 апреля 2016 в 15:09\n',
+          't',
+          'e',
+          's',
+          't',
+          '2',
+          '\n',
+        ]
+        stdoutRes.forEach(el => {
+          assert(stdout.calledWith(el));
+        });
+        assert(stdout.callCount, stdoutRes.length);
       });
-      assert(stdout.callCount, stdoutRes.length);
+      clock.tick(30000);
     });
   });
   describe('exceptions', () => {
