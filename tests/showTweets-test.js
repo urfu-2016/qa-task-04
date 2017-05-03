@@ -18,7 +18,7 @@ const TWEETS = [
 
 describe('showTweets', () => {
     it('should print tweets on console', () => {
-        const consoleLog = sinon.stub(console, 'log');
+        const consoleLog = sinon.spy(console, 'log');
         const formatDate = sinon.stub();
         const showTweets = proxyquire('../showTweets', {
             './formatDate': formatDate
