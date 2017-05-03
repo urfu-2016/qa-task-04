@@ -1,4 +1,4 @@
-const assert = require('assert');
+ï»¿const assert = require('assert');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const nock = require('nock');
@@ -7,7 +7,7 @@ const tweetMessages =
 [
     {
         "created_at": "2017-04-25T15:09:10.609Z",
-        "text": "×óòü êîðî÷å^^"
+        "text": "Ð§ÑƒÑ‚ÑŒ ÐºÐ¾Ñ€Ð¾Ñ‡Ðµ^^"
     },
     {
         "created_at": "2016-04-25T15:09:10.609Z",
@@ -27,7 +27,7 @@ describe('showTweets', () =>
 	
 	describe('Positive tests', () =>
 	{
-		it('Äîëæåí âûâîäèòü òâèòû íà êîíñîëü', done =>
+		it('Ð”Ð¾Ð»Ð¶ÐµÐ½ Ð²Ñ‹Ð²Ð¾Ð´Ð¸Ñ‚ÑŒ Ñ‚Ð²Ð¸Ñ‚Ñ‹ Ð½Ð° ÐºÐ¾Ð½ÑÐ¾Ð»ÑŒ', done =>
 		{
 			const log = sinon.stub(console, 'log');
 			const error = sinon.stub(console, 'error');
@@ -35,16 +35,16 @@ describe('showTweets', () =>
 			.get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
 			.reply(200, tweetMessages);
 			const formatDate = sinon.stub();
-			formatDate.withArgs(tweetMessages[0].created_at).returns('25 àïðåëü â 15:09');
-			formatDate.withArgs(tweetMessages[1].created_at).returns('25 ìàðòà 2016 ãîäà â 15:09');
+			formatDate.withArgs(tweetMessages[0].created_at).returns('25 Ð°Ð¿Ñ€ÐµÐ»ÑŒ Ð² 15:09');
+			formatDate.withArgs(tweetMessages[1].created_at).returns('25 Ð¼Ð°Ñ€Ñ‚Ð° 2016 Ð³Ð¾Ð´Ð° Ð² 15:09');
 			formatDate.throws('Invalid arguments');
 			const showTweets = proxyquire('../showTweets', {
 				'./formatDate': formatDate});
 			showTweets(() =>
             {
-                assert(log.calledWith('25 àïðåëü â 15:09'));
-                assert(log.calledWith('×óòü êîðî÷å äëÿ óäîáñòâà^^'));
-                assert(log.calledWith('25 ìàðòà 2016 ãîäà â 15:09'));
+                assert(log.calledWith('25 Ð°Ð¿Ñ€ÐµÐ»ÑŒ Ð² 15:09'));
+                assert(log.calledWith('Ð§ÑƒÑ‚ÑŒ ÐºÐ¾Ñ€Ð¾Ñ‡Ðµ^^'));
+                assert(log.calledWith('25 Ð¼Ð°Ñ€Ñ‚Ð° 2016 Ð³Ð¾Ð´Ð° Ð² 15:09'));
                 assert(log.calledWith('Hello, world!'));
                 assert(!error.called);
                 done();
@@ -53,7 +53,7 @@ describe('showTweets', () =>
 	});
 	describe('Negative tests', () => 
 	{
-		it('Äîëæåí âûáðîñèòü îøèáêó, åñëè êîä îòâåòà != 200', done =>
+		it('Ð”Ð¾Ð»Ð¶ÐµÐ½ Ð²Ñ‹Ð±Ñ€Ð¾ÑÐ¸Ñ‚ÑŒ Ð¾ÑˆÐ¸Ð±ÐºÑƒ, ÐµÑÐ»Ð¸ ÐºÐ¾Ð´ Ð¾Ñ‚Ð²ÐµÑ‚Ð° != 200', done =>
 		{
 			const log = sinon.stub(console, 'log');
 			const error = sinon.stub(console, 'error');
@@ -68,11 +68,11 @@ describe('showTweets', () =>
 				done();
 			});
 		});
-		it('Äîëæåí âûáðîñèòü îøèáêó, åñëè âåðíåòñÿ íåâàëèäíûé òâèò', done =>
+		it('Ð”Ð¾Ð»Ð¶ÐµÐ½ Ð²Ñ‹Ð±Ñ€Ð¾ÑÐ¸Ñ‚ÑŒ Ð¾ÑˆÐ¸Ð±ÐºÑƒ, ÐµÑÐ»Ð¸ Ð²ÐµÑ€Ð½ÐµÑ‚ÑÑ Ð½ÐµÐ²Ð°Ð»Ð¸Ð´Ð½Ñ‹Ð¹ Ñ‚Ð²Ð¸Ñ‚', done =>
 		{
 			const log = sinon.stub(console, 'log');
 			const error = sinon.stub(console, 'error');
-			const InvalidBody = 'Ìóñîð âñÿêèé íåâàëèäíûé';
+			const InvalidBody = 'ÐœÑƒÑÐ¾Ñ€ Ð²ÑÑÐºÐ¸Ð¹ Ð½ÐµÐ²Ð°Ð»Ð¸Ð´Ð½Ñ‹Ð¹';
 			nock ('https://api.twitter.com')
 			.get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
 			.reply(200, InvalidBody);
@@ -84,13 +84,13 @@ describe('showTweets', () =>
 				done();
 			});
 		});
-		it('Äîëæåí âûáðîñèòü îøèáêó, åñëè çàïðîñ áûë ñ îøèáêîé', done =>
+		it('Ð”Ð¾Ð»Ð¶ÐµÐ½ Ð²Ñ‹Ð±Ñ€Ð¾ÑÐ¸Ñ‚ÑŒ Ð¾ÑˆÐ¸Ð±ÐºÑƒ, ÐµÑÐ»Ð¸ Ð·Ð°Ð¿Ñ€Ð¾Ñ Ð±Ñ‹Ð» Ñ Ð¾ÑˆÐ¸Ð±ÐºÐ¾Ð¹', done =>
 		{
 			const log = sinon.stub(console, 'log');
 			const error = sinon.stub(console, 'error');
 			nock ('https://api.twitter.com')
 			.get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
-			.replyWithError('Îøèáêó çäåñü âèäèøü òû');
+			.replyWithError('ÐžÑˆÐ¸Ð±ÐºÑƒ Ð·Ð´ÐµÑÑŒ Ð²Ð¸Ð´Ð¸ÑˆÑŒ Ñ‚Ñ‹');
 			const showTweets = require('../showTweets');
 			showTweets(() =>
 			{
@@ -102,24 +102,3 @@ describe('showTweets', () =>
 		
 	});
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
