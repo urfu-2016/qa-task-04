@@ -31,9 +31,9 @@ describe('formatDate', () => {
 	
 	it('should return `3 марта 2016 года в 00:00` for new Date(2016, 2, 3, 0, 0, 0, 0)', () => {
 		const today = sinon.useFakeTimers(new Date(2017, 5, 3, 0, 0));
-        const date =  formatDate(new Date(2016, 2, 3, 0, 0, 0, 0));
+        const date =  formatDate(new Date(2016, 2, 3, 10, 0, 0, 0));
 
-        assert.equal(date, '3 марта 2016 года в 00:00');
+        assert.equal(date, '3 марта 2016 года в 10:00');
 		today.restore();
     });
 	
