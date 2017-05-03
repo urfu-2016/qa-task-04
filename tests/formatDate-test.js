@@ -42,6 +42,11 @@ describe('formatDate', () => {
 
     	assert.throws(actual, /На вход подаётся только 1 аргумент./);
     });
+    it ('should throw error when arguments number is not data', () =>{
+    	const actual = () => formatDate("эээээ");
+
+    	assert.throws(actual, /На вход должна подаваться валидная дата./);
+    });
 
 
 });
