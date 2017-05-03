@@ -4,7 +4,7 @@ function formatDate(date) {
     var now = new Date();
     var date = new Date(date);
     var dateTime = date.toLocaleTimeString('ru-RU',
-        { hour: '2-digit', minute: '2-digit'})
+        { hour: '2-digit', minute: '2-digit', hour12: false})
     var dateDay = date.getDate().toString()
     var nowDay = now.getDate().toString()
     var dateMonth = date.getMonth()
