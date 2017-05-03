@@ -8,7 +8,7 @@ const url = 'https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-20
 function showTweets(cb) {
     request(url, (requestError, res, body) => {
             if (requestError) {
-                cb(requestError.message);
+                return cb(requestError.message);
             }
 
             let tweets;

@@ -47,11 +47,12 @@ describe('showTweets', () => {
             const error = sinon.spy(console, 'error');
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
-                .replyWithError({'message': 'Internal server error', 'code': '500'});
+                .replyWithError('Internal server error');
             
             showTweets.showTweets((error, _) => {
                 assert.equal(error, 'Internal server error');   
                 done();
             });
+        
     });
 });
