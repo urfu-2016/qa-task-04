@@ -30,7 +30,8 @@ function formatDate(date) {
 function getFormattedDate(date) {
 
     const dateNow = new Date();
-    dateNow.setHours(0, 0, 0, 0);
+    dateNow.setUTCHours(0, 0, 0, 0);
+
     const elapsedTime = dateNow - date;
     if (elapsedTime <= 0) {
         return getFormattedTime(date);
@@ -47,15 +48,15 @@ function getFormattedDate(date) {
 }
 
 function getFormattedTime(date) {
-    return `${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;
+    return `${`0${date.getUTCHours()}`.slice(-2)}:${`0${date.getUTCMinutes()}`.slice(-2)}`;
 }
 
 function getFormattedDay(date) {
-    return `${`0${date.getDate()}`.slice(-2)} ${MONTHS[date.getMonth()]}`;
+    return `${`0${date.getUTCDate()}`.slice(-2)} ${MONTHS[date.getUTCMonth()]}`;
 }
 
 function getFormattedYear(date) {
-    return `${date.getFullYear()} года`;
+    return `${date.getUTCFullYear()} года`;
 }
 
 module.exports = formatDate;
