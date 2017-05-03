@@ -1,3 +1,5 @@
+'use strict';
+
 const nock = require('nock');
 const sinon = require('sinon');
 const assert = require('assert');

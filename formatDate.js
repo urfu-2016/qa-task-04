@@ -3,6 +3,11 @@
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
                  'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
 
+/**
+ * Returns new Date object with increased number of days
+ * @param {Number} days number of days to increase
+ * @return {Date} new Date object
+ */
 Date.prototype.addDays = function(days) {
   var newDate = new Date(this.valueOf());
   newDate.setDate(newDate.getDate() + days);
@@ -15,10 +20,15 @@ Date.prototype.addDays = function(days) {
  * @return {String} formatted date
  */
 function formatDate(date, todayDate = new Date()) {
+    if (!date || date.toString() === 'Invalid Date')
+        throw new TypeError('Argument must be of type Date');
+    
     const day = date.getDate();
     const year = date.getFullYear();
     const month = MONTHS[date.getMonth()];
-    const hoursAndMinutes = date.toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'}); 
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    const hoursAndMinutes = `${hours}:${minutes}`;
     
     return haveSameDates(date, todayDate)            ? hoursAndMinutes 
          : haveSameDates(date.addDays(1), todayDate) ? `вчера в ${hoursAndMinutes}`

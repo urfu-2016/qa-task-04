@@ -1,25 +1,9 @@
+'use strict';
+
 const assert = require('assert');
 const formatDate = require('../formatDate');
 
 describe('formatDate', () => {
-    it('haveSameDates should return true if dates have equal DD:MM:YYYY', () => {
-        var todayMorning = new Date('January 1, 2017 07:00:00');
-        var todayEvening = new Date('January 1, 2017 19:00:00');
-
-        var actualResult = formatDate.haveSameDates(todayMorning, todayEvening);
-    
-        assert.equal(actualResult, true);
-    });
-
-    it('haveSameDates should return false if dates has not equal DD:MM:YYYY', () => {
-        const todayMorning = new Date('January 1, 2017');
-        const tommorowEvening = new Date('January 2, 2017');
-
-        const actualResult = formatDate.haveSameDates(todayMorning, tommorowEvening);
-    
-        assert.equal(actualResult, false);
-    });
-
     it('should print only time if day is today', () => {
         const todayMorning = new Date('January 1, 2017 07:00:00');
         const todayEvening = new Date('January 1, 2017 19:00:00');
@@ -55,4 +39,32 @@ describe('formatDate', () => {
 
         assert.equal(actualResult, '1 января 2016 года в 12:00');
     });
+
+    it('should throws `TypeError` when argument not of Date type', () => {
+        const date = new Date('Incorrect date');
+
+        const formatAction = () => formatDate.formatDate(date);
+
+        assert.throws(formatAction, TypeError, 'Argument must be of type Date')
+    })
 });
+
+describe('haveSameDates', () => {
+    it('should return true if dates have equal DD:MM:YYYY', () => {
+        var todayMorning = new Date('January 1, 2017 07:00:00');
+        var todayEvening = new Date('January 1, 2017 19:00:00');
+
+        var actualResult = formatDate.haveSameDates(todayMorning, todayEvening);
+    
+        assert.equal(actualResult, true);
+    });
+
+    it('should return false if dates has not equal DD:MM:YYYY', () => {
+        const todayMorning = new Date('January 1, 2017');
+        const tommorowEvening = new Date('January 2, 2017');
+
+        const actualResult = formatDate.haveSameDates(todayMorning, tommorowEvening);
+    
+        assert.equal(actualResult, false);
+    });
+})

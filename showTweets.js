@@ -1,3 +1,5 @@
+'use strict'
+
 const formatDate = require('./formatDate');
 const request = require('request');
 
