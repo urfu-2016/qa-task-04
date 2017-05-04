@@ -9,6 +9,7 @@ function showTweets(cb) {
     request(url, (requestError, res, body) => {
             if (requestError || res.statusCode !== 200) {
                 const errorMessage = requestError ? requestError.message : 'Request failed';
+                console.error('Request failed');
                 return cb(errorMessage);
             }
 
@@ -16,10 +17,12 @@ function showTweets(cb) {
             try {
                 data = JSON.parse(body);
             } catch (parseError) {
+                console.error('Could not parse tweets');
                 cb('Parse error');
             }
 
-            data.statuses.forEach(tweet => { 
+            data.statuses.filter(tweet => tweet != null).
+                forEach(tweet => { 
                     const tweetDate = formatDate(new Date(tweet.created_at));
                     const result = `${tweetDate}\n${tweet.text}`;
                     console.log(result);

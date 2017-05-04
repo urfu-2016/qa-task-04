@@ -28,7 +28,7 @@ describe('showTweets', () => {
             nock.cleanAll();
         });
 
-        it('should print formatted tweet date and text', done => {
+        it('should show formatted tweet date and text', done => {
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .reply(200, TWEETS);
@@ -46,53 +46,69 @@ describe('showTweets', () => {
             });
         });
 
-        it('should return error when request failed', done => {
+        it('should show `Request failed` when server reply with error', done => {
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .replyWithError('Internal server error');
             
-            showTweets((error, _) => {
-                assert.equal(error, 'Internal server error');
+            showTweets(() => {
+                assert(error.calledWith('Request failed'));
+                assert(error.calledOnce);
                 assert(!log.called);   
                 done();
             });
 
         });
 
-        it('should return `Request failed` when status code not 200', done => {
+        it('should show `Request failed` when status code not 200', done => {
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .reply(500, 'Internal server error');
             
-            showTweets((error, _) => {
-                assert.equal(error, 'Request failed');   
+            showTweets(() => {
+                assert(error.calledWith('Request failed'))  
+                assert(error.calledOnce); 
                 assert(!log.called);
                 done();
             });
 
         });
 
-        it('should return `Parse error` when server response invalid JSON', done => {
+        it('should show `Could not parse tweets` when server response invalid JSON', done => {
             const invalidJSON = '{statuses: [,"ivallid_Data":01 ]}';
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .reply(200, invalidJSON);
 
-            showTweets((error, _) => {
-                assert.equal(error, 'Parse error');
+            showTweets(() => {
+                assert(error.calledWith('Could not parse tweets'));
+                assert(error.calledOnce);
                 assert(!log.called);
                 done();
             })
         });
 
-        it('should not print anything when tweets list is empty', done => {
+        it('should not show anything when tweets list is empty', done => {
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .reply(200, '{"statuses": []}');
 
-            showTweets((error, _) => {
+            showTweets(() => {
                 assert(!log.called);
-                assert(!error);
+                assert(!error.called);
+                done();
+            })
+        });
+
+        it('should not show tweets, parsed as `null`', done => {
+            const responseWithNull = '{"statuses": [null, null, null]}';
+            nock('https://api.twitter.com')
+                .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+                .reply(200, responseWithNull);
+
+            showTweets(() => {
+                assert(!log.called);
+                assert(!error.called);
                 done();
             })
         });
