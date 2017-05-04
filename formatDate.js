@@ -2,13 +2,22 @@ const monthDic = [' января ',' февраля ',' марта ',
     ' апреля ',' мая ',' июня ',' июля ',' августа ',
     ' сентября ',' октября ',' ноября ',' декабря ',];
 
-function formatDate(date, dateNow) {
+function formatDate(date) {
+    var dateNow = new Date();
 
-    if (!((date instanceof Date) && (dateNow instanceof Date)))
-        throw new TypeError('Входные параметры должны быть типа Date');
+    if (!(date instanceof Date)){
+        throw new TypeError('Входной параметр должны быть типа Date');
+    }
+
+    date = new Date(date);
+
+    if (date.toString() === 'Invalid Date') {
+        throw new TypeError('Входной параметр должны содержать корректные данные');
+    }
+
 
     if (dateNow < date) {
-        throw new Error('date не должен превышать dateNow');
+        throw new Error('date не должен превышать текущую дату');
     }
 
     var year = dateNow.getFullYear();
