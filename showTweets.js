@@ -7,30 +7,27 @@ const url = 'https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-20
 
 function showTweets(cb) {
     request(url, (requestError, res, body) => {
-            if (requestError) {
-                return cb(requestError.message);
+            if (requestError || res.statusCode !== 200) {
+                const errorMessage = requestError ? requestError.message : 'Request failed';
+                return cb(errorMessage);
             }
 
-            let tweets;
+            let data;
             try {
-                const data = JSON.parse(body);
-                tweets = data.statuses.map(tweet => {
-                    return {'created_at': tweet.created_at, 'text': tweet.text}
-                });
+                data = JSON.parse(body);
             } catch (parseError) {
-                cb(parseError);
+                cb('Parse error');
             }
 
-            tweets.forEach(tweet => { 
-                const tweetDate = formatDate.formatDate(new Date(tweet.created_at));
-                const result = `${tweetDate}\n${tweet.text}`;
-                console.log(result);
-                cb(null, result);
+            data.statuses.forEach(tweet => { 
+                    const tweetDate = formatDate(new Date(tweet.created_at));
+                    const result = `${tweetDate}\n${tweet.text}`;
+                    console.log(result);
+                    cb(null, result);
             });
-                
+            cb();
+
     });
 }
 
-module.exports = {
-    showTweets: showTweets
-};
+module.exports = showTweets;

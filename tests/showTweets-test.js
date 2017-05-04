@@ -3,27 +3,32 @@
 const nock = require('nock');
 const sinon = require('sinon');
 const assert = require('assert');
-const request = require('request');
-const proxyquire =  require('proxyquire');
+const proxyquire = require('proxyquire');
 const showTweets = require('../showTweets');
 
 const TWEETS = {
-    statuses: [{
-        "created_at": "2017-04-25T15:09:10.609Z",
-        "text": "Hello, world!"
-    }]
+        statuses: [{
+            'created_at': '2017-04-25T15:09:10.609Z',
+            'text': 'Hello, world!'
+        }]
 };
 
 describe('showTweets', () => {
-    afterEach(() => {
+        let log;
+        let error;
+        
+        beforeEach(() => {
+            log = sinon.spy(console, 'log');
+            error = sinon.spy(console, 'error');
+        });
+
+        afterEach(() => {
             console.log.restore();
             console.error.restore();
             nock.cleanAll();
         });
 
         it('should print formatted tweet date and text', done => {
-            const log = sinon.spy(console, 'log');
-            const error = sinon.spy(console, 'error');
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .reply(200, TWEETS);
@@ -32,9 +37,8 @@ describe('showTweets', () => {
             const showTweets = proxyquire('../showTweets', {
                 './formatDate': expectedDate
             });
-            
 
-            showTweets.showTweets((_, result) => {
+            showTweets((_, result) => {
                 assert(log.calledWith(result));
                 assert(log.calledOnce);
                 assert(!error.called);
@@ -43,16 +47,53 @@ describe('showTweets', () => {
         });
 
         it('should return error when request failed', done => {
-            const log = sinon.spy(console, 'log');
-            const error = sinon.spy(console, 'error');
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .replyWithError('Internal server error');
             
-            showTweets.showTweets((error, _) => {
-                assert.equal(error, 'Internal server error');   
+            showTweets((error, _) => {
+                assert.equal(error, 'Internal server error');
+                assert(!log.called);   
                 done();
             });
-        
-    });
+
+        });
+
+        it('should return `Request failed` when status code not 200', done => {
+            nock('https://api.twitter.com')
+                .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+                .reply(500, 'Internal server error');
+            
+            showTweets((error, _) => {
+                assert.equal(error, 'Request failed');   
+                assert(!log.called);
+                done();
+            });
+
+        });
+
+        it('should return `Parse error` when server response invalid JSON', done => {
+            const invalidJSON = '{statuses: [,"ivallid_Data":01 ]}';
+            nock('https://api.twitter.com')
+                .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+                .reply(200, invalidJSON);
+
+            showTweets((error, _) => {
+                assert.equal(error, 'Parse error');
+                assert(!log.called);
+                done();
+            })
+        });
+
+        it('should not print anything when tweets list is empty', done => {
+            nock('https://api.twitter.com')
+                .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+                .reply(200, '{"statuses": []}');
+
+            showTweets((error, _) => {
+                assert(!log.called);
+                assert(!error);
+                done();
+            })
+        });
 });
