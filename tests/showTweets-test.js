@@ -6,8 +6,8 @@ const showTweets = require('../showTweets');
 
 describe('showTweets', () => {
 
-    const twitterUrl = 'https://api.twitter.com';
-    const twitterGetQuery = '/1.1/search/tweets.json?q=%23urfu-testing-2016';
+    const TWITTER_URL = 'https://api.twitter.com';
+    const TWITTER_GET_QUERY = '/1.1/search/tweets.json?q=%23urfu-testing-2016';
 
     const testTweets = [
         {"created_at": "2017-04-25T15:09:10.609Z", "text": "Твит"},
@@ -28,15 +28,13 @@ describe('showTweets', () => {
         it('should print tweets to console', async() => {
             clock = sinon.useFakeTimers();
             clock.setTimeout = (cb) => {
-                clock.tick(100);
+                clock.tick(10000);
                 cb();
             };
 
-            const expectedPrint = ['1', '5', ':', '0', '9', '\n', 'Т', 'в', 'и', 'т', '\n', '\n', '2', '5', ' ',
-                'а', 'п', 'р', 'е', 'л', 'я', ' ', '2', '0', '1', '6', ' ', 'г', 'о', 'д', 'а', ' ', 'в', ' ',
-                '1', '5', ':', '0', '9', '\n', 'T', 'w', 'e', 'e', 't', '\n', '\n'];
+            const expectedPrint = "15:09\nТвит\n\n25 апреля 2016 года в 15:09\nTweet\n\n".split("");
 
-            nock(twitterUrl).get(twitterGetQuery)
+            nock(TWITTER_URL).get(TWITTER_GET_QUERY)
                 .reply(200, testTweets);
 
             const stdout = sinon.spy(process.stdout, 'write');
@@ -72,7 +70,7 @@ describe('showTweets', () => {
         });
 
         it('should throw Error if request error', async() => {
-            nock(twitterUrl).get(twitterGetQuery)
+            nock(TWITTER_URL).get(TWITTER_GET_QUERY)
                 .replyWithError('Error');
             try {
                 await showTweets();
@@ -83,7 +81,7 @@ describe('showTweets', () => {
         });
 
         it('should throw Error if status codes other than 2xx', async() => {
-            nock(twitterUrl).get(twitterGetQuery)
+            nock(TWITTER_URL).get(TWITTER_GET_QUERY)
                 .reply(404, testTweets);
             try {
                 await showTweets();
@@ -94,7 +92,7 @@ describe('showTweets', () => {
         });
 
         it('should throw Error if response not JSON', async() => {
-            nock(twitterUrl).get(twitterGetQuery)
+            nock(TWITTER_URL).get(TWITTER_GET_QUERY)
                 .reply(200, 'не JSON');
             try {
                 await showTweets();
@@ -105,7 +103,7 @@ describe('showTweets', () => {
         });
 
         it('should throw Error if response not Object', async() => {
-            nock(twitterUrl).get(twitterGetQuery)
+            nock(TWITTER_URL).get(TWITTER_GET_QUERY)
                 .reply(200, 1);
             try {
                 await showTweets();
@@ -116,7 +114,7 @@ describe('showTweets', () => {
         });
 
         it('should throw Error if response tweets hasn`t property created_at', async() => {
-            nock(twitterUrl).get(twitterGetQuery)
+            nock(TWITTER_URL).get(TWITTER_GET_QUERY)
                 .reply(200, [{"text": "test"}]);
             try {
                 await showTweets();
@@ -127,7 +125,7 @@ describe('showTweets', () => {
         });
 
         it('should throw Error if response tweets hasn`t property text', async() => {
-            nock(twitterUrl).get(twitterGetQuery)
+            nock(TWITTER_URL).get(TWITTER_GET_QUERY)
                 .reply(200, [{"created_at": "2017-04-25T15:09:10.609Z"}]);
             try {
                 await showTweets();

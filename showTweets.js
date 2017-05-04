@@ -1,8 +1,7 @@
 const formatDate = require("./formatDate");
-const nock = require("nock");
 const request = require("request-promise");
 
-const twitterQuery = 'https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-2016';
+const TWITTER_QUERY = 'https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-2016';
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -56,7 +55,7 @@ async function showTweets() {
 
     let response;
     try {
-        response = await request.get(twitterQuery);
+        response = await request.get(TWITTER_QUERY);
     } catch (error) {
         throw new Error("Запрос к серверу не удался или сервер вернул код ошибки отличный от 2хх")
     }

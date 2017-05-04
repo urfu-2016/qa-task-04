@@ -10,7 +10,7 @@ describe('formatDate', () => {
     });
 
     describe('Positive test', () => {
-        it('should return hh:mm for today date', () => {
+        it('should return 05:15 for today date', () => {
             const todayTime = new Date(2017, 4, 1, 5, 15);
             clock = sinon.useFakeTimers(new Date(2017, 4, 1, 12).getTime());
             const actual = formateDate(todayTime.toString());
@@ -18,7 +18,7 @@ describe('formatDate', () => {
             assert.equal(actual, '05:15');
         });
 
-        it('should return "вчера в hh:mm" for yesterday date', () => {
+        it('should return "вчера в 05:05" for yesterday date', () => {
             const yesterdayTime = new Date(2017, 3, 30, 5, 5);
             clock = sinon.useFakeTimers(new Date(2017, 4, 1, 12).getTime());
             const actual = formateDate(yesterdayTime.toString());
@@ -26,7 +26,7 @@ describe('formatDate', () => {
             assert.equal(actual, 'вчера в 05:05');
         });
 
-        it('should return "dd month в hh:mm" for more day ago date', () => {
+        it('should return "29 апреля в 15:15" for more day ago date', () => {
             const dayAgoTime = new Date(2017, 3, 29, 15, 15);
             clock = sinon.useFakeTimers(new Date(2017, 4, 1, 12).getTime());
             const actual = formateDate(dayAgoTime.toString());
@@ -34,7 +34,7 @@ describe('formatDate', () => {
             assert.equal(actual, '29 апреля в 15:15');
         });
 
-        it('should return "dd month yy года в hh:mm" for more year ago date', () => {
+        it('should return "29 апреля 2016 года в 05:15" for more year ago date', () => {
             const yearAgoTime = new Date(2016, 3, 29, 5, 15);
             clock = sinon.useFakeTimers(new Date(2017, 4, 1, 12).getTime());
             const actual = formateDate(yearAgoTime.toString());
