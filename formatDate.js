@@ -19,10 +19,11 @@ Date.prototype.addDays = function(days) {
  * @param {Date} date
  * @return {String} formatted date
  */
-function formatDate(date, todayDate = new Date()) {
-    if (!date || date.toString() === 'Invalid Date')
+function formatDate(date) {
+    if (!(date instanceof Date) || date.toString() === 'Invalid Date')
         throw new TypeError('Argument must be of type Date');
     
+    const today = new Date();
     const day = date.getDate();
     const year = date.getFullYear();
     const month = MONTHS[date.getMonth()];
@@ -30,9 +31,9 @@ function formatDate(date, todayDate = new Date()) {
     const minutes = ('0' + date.getMinutes()).slice(-2);
     const hoursAndMinutes = `${hours}:${minutes}`;
     
-    return haveSameDates(date, todayDate)            ? hoursAndMinutes 
-         : haveSameDates(date.addDays(1), todayDate) ? `вчера в ${hoursAndMinutes}`
-         : year === todayDate.getFullYear()          ? `${day} ${month} в ${hoursAndMinutes}`
+    return haveSameDates(date, today)            ? hoursAndMinutes 
+         : haveSameDates(date.addDays(1), today) ? `вчера в ${hoursAndMinutes}`
+         : year === today.getFullYear()          ? `${day} ${month} в ${hoursAndMinutes}`
          : `${day} ${month} ${year} года в ${hoursAndMinutes}`;
 }
 
@@ -46,7 +47,4 @@ function haveSameDates(date, anotherDate) {
     return date.toLocaleDateString() === anotherDate.toLocaleDateString();
 }
 
-module.exports = {
-    formatDate: formatDate,
-    haveSameDates: haveSameDates
-}
+module.exports = formatDate;
