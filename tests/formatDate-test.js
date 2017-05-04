@@ -40,6 +40,10 @@ describe('formatDate', () =>
             runSuccessTest(new Date(2013, 5, 14, 15, 3).toString(), '15:03'));
         it('Should return "11:22" for 14.05.2013 11:22',
             runSuccessTest(new Date(2013, 5, 14, 11, 22).toString(), '11:22'));
+        it('Should return "05:34" for 14.05.2013 05:34',
+            runSuccessTest(new Date(2013, 5, 14, 5, 34).toString(), '05:34'));
+        it('Should return "02:09" for 14.05.2013 02:09',
+            runSuccessTest(new Date(2013, 5, 14, 2, 9).toString(), '02:09'));
     });
 
     describe('Invalid data', () =>

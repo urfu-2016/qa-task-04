@@ -1,5 +1,5 @@
 const MONTHS =
-    [`января`,`Февраля`,`марта`,`апреля`,
+    [`января`,`февраля`,`марта`,`апреля`,
      `мая`,`июня`,`июля`,`августа`,
      `сентября`,`октября`,`ноября`,`декабря`];
 
@@ -20,9 +20,14 @@ function getDateInterval(inpDate)
 
 function getTime(date)
 {
-    if (date.getMinutes() >= 10)
-        return `${date.getHours()}:${date.getMinutes()}`;
-    return `${date.getHours()}:0${date.getMinutes()}`;
+    let resultTime = `${date.getHours()}`;
+    if (date.getHours() < 10)
+        resultTime = `0` + resultTime;
+    if (date.getMinutes() < 10)
+        resultTime += `:0${date.getMinutes()}`;
+    else
+        resultTime += `:${date.getMinutes()}`;
+    return resultTime;
 }
 
 function formatDate(date)

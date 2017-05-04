@@ -40,10 +40,11 @@ describe('showTweets', () =>
             const showTweets = proxyquire('../showTweets', {'./formatDate': formatDate});
             showTweets(() =>
             {
-                assert(log.calledWith('25 мая в 15:09'));
-                assert(log.calledWith('Some text for the test'));
-                assert(log.calledWith('25 мая 2016 года в 15:09'));
-                assert(log.calledWith('Какой-то текст для теста'));
+                assert.equal(log.callCount, 4);
+                assert(log.firstCall.calledWith('25 мая в 15:09'));
+                assert(log.secondCall.calledWith('Some text for the test'));
+                assert(log.thirdCall.calledWith('25 мая 2016 года в 15:09'));
+                assert(log.lastCall.calledWith('Какой-то текст для теста'));
                 assert(!error.called);
                 done();
             });
