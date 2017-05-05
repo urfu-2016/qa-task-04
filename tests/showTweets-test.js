@@ -20,22 +20,19 @@ const mockTweets = [
     }
 ];
 
+const formatDate = sinon.stub();
+
+let expectedDate_1 = '25 апреля в 20:09';
+let expectedDate_2 = '25 апреля 2016 года 20:09';
+
+formatDate.withArgs(mockTweets[0].created_at).returns(expectedDate_1);  // TODO: Через год тест рухнет
+formatDate.withArgs(mockTweets[1].created_at).returns(expectedDate_2);
+
+const showTweets = proxyquire('../showTweets', {
+    './formatDate': formatDate
+});
+
 describe('showTweets tests', () => {
-    const formatDate = sinon.stub();
-
-    let expectedDate_1 = '25 апреля в 20:09';
-    let expectedDate_2 = '25 апреля 2016 года 20:09';
-
-    formatDate.withArgs(mockTweets[0].created_at).returns(expectedDate_1);  // TODO: Через год тест рухнет
-    formatDate.withArgs(mockTweets[1].created_at).returns(expectedDate_2);
-
-    const showTweets = proxyquire('../showTweets', {
-        './formatDate': {
-            formatDate: formatDate,
-            months: []
-        }
-    });
-
     afterEach(() => {
         nock.cleanAll()
     });
@@ -64,5 +61,31 @@ describe('showTweets tests', () => {
 });
 
 describe('showTweets exception tests', () => {
-    // TODO: Завтра, обещаю
+    afterEach(() => {
+        nock.cleanAll()
+    });
+
+    it('should return server error', async () => {
+        nock(twitterUrl.origin)
+            .get(`${twitterUrl.pathname}${twitterUrl.search}`)
+            .replyWithError({'message': 'Server error'});
+
+        try {
+            await showTweets();
+        } catch (e) {
+            assert.equal('Server error', e);
+        }
+    });
+
+    it('should return parse JSON error', async () => {
+        nock(twitterUrl.origin)
+            .get(`${twitterUrl.pathname}${twitterUrl.search}`)
+            .reply(200, 'love');
+
+        try {
+            await showTweets();
+        } catch (e) {
+            assert.equal(e.toString(), 'SyntaxError: Unexpected token l in JSON at position 0')
+        }
+    });
 });

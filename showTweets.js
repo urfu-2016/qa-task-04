@@ -2,7 +2,7 @@
 
 const request = require('request');
 
-const formatDate = require('./formatDate').formatDate;
+const formatDate = require('./formatDate');
 
 const twitterUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-2016';
 
@@ -17,8 +17,8 @@ function showTweets() {
                 const data = JSON.parse(body);
 
                 data.forEach(item => {
-                    item.created_at = formatDate(item.created_at);
-                    console.log(`${item.created_at}\n${item.text}`);
+                    let createdAt = formatDate(item.created_at);
+                    console.log(`${createdAt}\n${item.text}`);
                 });
 
                 resolve(null);

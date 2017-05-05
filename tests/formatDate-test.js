@@ -2,8 +2,22 @@
 
 const assert = require('assert');
 
-const formatDate = require('../formatDate').formatDate;
-const months = require('../formatDate').months;
+const formatDate = require('../formatDate');
+
+const months = [
+    'января',
+    'февраля',
+    'марта',
+    'апреля',
+    'мая',
+    'июня',
+    'июля',
+    'августа',
+    'сентября',
+    'октября',
+    'ноября',
+    'декабря',
+];
 
 describe('formatDate exception tests', () => {
     it('should return exception when call without argument', () => {

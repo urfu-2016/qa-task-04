@@ -49,7 +49,4 @@ function formatDate(date) {
     return time;
 }
 
-module.exports = {
-    formatDate: formatDate,
-    months: months
-};
+module.exports = formatDate;
