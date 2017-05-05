@@ -6,24 +6,27 @@ const MONTHS = [
 ];
 
 /**
- * Function transform `dateForFormat` to:
- *  'HH:MM' - if it today,
- *  'вчера в HH:MM' - if it yesterday,
- *  'DD МЕСЯЦА в HH:MM' - if it in this year,
- *  'DD МЕСЯЦА YYYY года в HH:MM' - if it in last year 
+ * Function transform `pastDate` to:
+ *  'HH:MM' - if `pastDate` is today,
+ *  'вчера в HH:MM' - if `pastDate` is yesterday,
+ *  'D МЕСЯЦА в HH:MM' - if `pastDate` in this year,
+ *  'D МЕСЯЦА YYYY года в HH:MM' - if `pastDate` in last year 
  * 
- * @param {Date} pastDate - this date will be formatted
- * @param {Date} currentDate 
+ * @param {Date} date - this date will be formatted
  * @return {String} formating date
  */
-function formatDate(pastDate, currentDate=new Date()) {
-    if (pastDate.toString() === 'Invalid Date' || 
-        currentDate.toString() === 'Invalid Date') {
-        throw new Error('Dates should be valid');
+function formatDate(pastDate) {
+    if (!(pastDate instanceof Date)) {
+        throw new TypeError('`pastDate` should has type Date');
     }
 
+    if (pastDate.toString() === 'Invalid Date') {
+        throw new Error('`pastDate` should be valid');
+    }
+
+    const currentDate = new Date();
     if (pastDate > currentDate) {
-        throw new Error('`pastDate` should be less then current');
+        throw new Error('`pastDate` should be less then current date');
     }
 
     const time = getFormattedTime(pastDate);
