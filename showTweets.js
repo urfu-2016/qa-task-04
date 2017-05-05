@@ -21,7 +21,8 @@ function showTweets(cb) {
                 cb('Parse error');
             }
 
-            data.statuses.filter(tweet => tweet != null).
+            data.statuses.
+                filter(tweet => tweet != null && tweet.created_at !== null && tweet.text !== null).
                 forEach(tweet => { 
                     const tweetDate = formatDate(new Date(tweet.created_at));
                     const result = `${tweetDate}\n${tweet.text}`;

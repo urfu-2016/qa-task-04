@@ -7,10 +7,10 @@ const proxyquire = require('proxyquire');
 const showTweets = require('../showTweets');
 
 const TWEETS = {
-        statuses: [{
-            'created_at': '2017-04-25T15:09:10.609Z',
-            'text': 'Hello, world!'
-        }]
+    statuses: [{
+        'created_at': '2017-04-25T15:09:10.609Z',
+        'text': 'Hello, world!'
+    }]
 };
 
 describe('showTweets', () => {
@@ -38,8 +38,8 @@ describe('showTweets', () => {
                 './formatDate': expectedDate
             });
 
-            showTweets((_, result) => {
-                assert(log.calledWith(result));
+            showTweets(() => {
+                assert(log.calledWith('25 апреля в 20:09\nHello, world!'));
                 assert(log.calledOnce);
                 assert(!error.called);
                 done();
@@ -102,6 +102,19 @@ describe('showTweets', () => {
 
         it('should not show tweets, parsed as `null`', done => {
             const responseWithNull = '{"statuses": [null, null, null]}';
+            nock('https://api.twitter.com')
+                .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+                .reply(200, responseWithNull);
+
+            showTweets(() => {
+                assert(!log.called);
+                assert(!error.called);
+                done();
+            })
+        });
+
+        it('should not show tweets with created_at or text equal to `null`', done => {
+            const responseWithNull = '{"statuses": [{"created_at": null, "text": null}]}';
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .reply(200, responseWithNull);
