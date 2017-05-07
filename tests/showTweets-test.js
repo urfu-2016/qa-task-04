@@ -3,9 +3,6 @@ const showTweets = require('../showTweets');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 const nock = require('nock');
-const URL = require('url').URL;
-
-const twitterUrl = new URL('https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-2016');
 
 const mockTweets = [
   {
@@ -17,6 +14,12 @@ const mockTweets = [
     'text': 'test2'
   }
 ]
+
+function nockTwitterAPI(statusCode, mock) {
+  nock('https://api.twitter.com')
+    .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+    .reply(statusCode, typeof mock == 'string' ? mock : JSON.stringify(mock));
+}
 
 describe('showTweets', () => {
   describe('stdout tests', ()=>{
@@ -33,10 +36,7 @@ describe('showTweets', () => {
     });
 
     it('should write to stdout by symbol interval by 100ms', async () => {
-      nock(twitterUrl.origin)
-        .get(`${twitterUrl.pathname}${twitterUrl.search}`)
-        .reply(200, mockTweets);
-
+      nockTwitterAPI(200, mockTweets);
       const stdout = sinon.spy(process.stdout, 'write');
       const formatDate = sinon.stub();
       formatDate.withArgs(new Date('2017-04-30T15:09:10.609Z')).returns('15:09');
@@ -76,9 +76,7 @@ describe('showTweets', () => {
     });
     
     it('should return "Incorrect server answer" error for 404 status code', async () => {
-      nock(twitterUrl.origin)
-        .get(`${twitterUrl.pathname}${twitterUrl.search}`)
-        .reply(404);
+      nockTwitterAPI(404);
       try {
         await showTweets();
       } catch(e) {
@@ -86,9 +84,7 @@ describe('showTweets', () => {
       }
     });
     it('should return "Incorrect server answer" error for empty body', async () => {
-      nock(twitterUrl.origin)
-        .get(`${twitterUrl.pathname}${twitterUrl.search}`)
-        .reply(200, '');
+      nockTwitterAPI('');
       try {
         await showTweets();
       } catch(e) {
@@ -97,9 +93,7 @@ describe('showTweets', () => {
     });
     it('should return "Answer from server must be JSON" error for' +
       ' not JSON response in body', async () => {
-      nock(twitterUrl.origin)
-        .get(`${twitterUrl.pathname}${twitterUrl.search}`)
-        .reply(200, 'not json');
+      nockTwitterAPI(200, 'not json');
       try {
         await showTweets();
       } catch(e) {
@@ -118,9 +112,7 @@ describe('showTweets', () => {
           'text': 'test2'
         }
       ]
-      nock(twitterUrl.origin)
-        .get(`${twitterUrl.pathname}${twitterUrl.search}`)
-        .reply(200, JSON.stringify(incorrectTweetsJSON));
+      nockTwitterAPI(200, incorrectTweetsJSON);
       try {
         await showTweets();
       } catch(e) {
@@ -140,9 +132,7 @@ describe('showTweets', () => {
           'text': 'test2'
         }
       ]
-      nock(twitterUrl.origin)
-        .get(`${twitterUrl.pathname}${twitterUrl.search}`)
-        .reply(200, JSON.stringify(incorrectTweetsJSON));
+      nockTwitterAPI(200, incorrectTweetsJSON);
       try {
         await showTweets();
       } catch(e) {

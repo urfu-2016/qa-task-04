@@ -15,8 +15,8 @@ async function printSlowly(text) {
 
 async function printToConsole(tweet) {
   if (!tweet || !tweet.text || !tweet.created_at) {
-    throw new Error("Incorrect format of data from server. " +
-      "Need object {text: String, created_at: Data}");
+    throw new Error('Incorrect format of data from server. ' +
+      'Need object {text: String, created_at: Data}');
   }
   console.log(formatDate(new Date(tweet.created_at)));
   await printSlowly(tweet.text);
@@ -30,13 +30,13 @@ async function showTweets() {
   let [res, body] = await Promise.fromNode(cb => request.get(twitterUrl.href, cb),
     { multiArgs: true });
   if (!body || res.statusCode !== 200) {
-    throw new Error("Incorrect server answer");
+    throw new Error('Incorrect server answer');
   }
   let parsedBody;
   try {
     parsedBody = JSON.parse(body);
   } catch(e) {
-    throw new Error("Answer from server must be JSON");
+    throw new Error('Answer from server must be JSON');
   }
   for (let tweet of parsedBody) {
     await printToConsole(tweet);

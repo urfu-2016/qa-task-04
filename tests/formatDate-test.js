@@ -40,7 +40,7 @@ describe('formatDate', () => {
     });
     describe('"вчера в hh:mm" format', () => {
       it('should return "вчера в hh:mm" for yesterday date', () => {
-        clock = setFakeTimer(2011,5,1);
+        clock = setFakeTimer(2011,5,5);
         const nowDate = new Date();
         setHoursAndMinutes(nowDate, 10, 10);
         nowDate.setDate(nowDate.getDate() - 1);
