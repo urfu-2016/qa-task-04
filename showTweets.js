@@ -11,7 +11,7 @@ function showTweets(cb) {
             return cb();
 		}
 		else if (response.statusCode != 200) {
-			console.log('statusCode:', response && response.statusCode);
+			console.log('statusCode: ' + response.statusCode);
             return cb();
 		}
 		else {
@@ -19,13 +19,12 @@ function showTweets(cb) {
 				const data = JSON.parse(body);
 				data.forEach(tweet => {
 					console.log(formatDate(tweet.createdAt) + '\n' + tweet.text);
-                    return cb();
 				});
 			}
-			catch (parseError){
+			catch (parseError){								// следует-ли сюда добавлять проверку на выброс Error из formatDate?
 				console.error(parseError.message);
-                return cb();
 			}
+			return cb();
 		}
 	});
 

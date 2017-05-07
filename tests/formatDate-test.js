@@ -2,15 +2,15 @@ const assert = require('assert');
 const formatDate = require('../formatDate');
 
 describe('formatDate', () => {
-    it('should return `00:00` for `2017-05-04T00:00:00.000Z`', () => {                  // валится каждый день
-        const actual = formatDate("2017-05-04T00:00:00.000Z");
+    it('should return `00:00` for `2017-05-07T00:00:00.000Z`', () => {                  // валится каждый день
+        const actual = formatDate("2017-05-07T00:00:00.000Z");
 
         assert.equal(actual, "00:00");
     });
 
 
-    it('should return `вчера в 23:59` for `2017-05-03T23:59:59.999Z`', () => {          // валится каждый день
-        const actual = formatDate("2017-05-03T23:59:59.999Z");
+    it('should return `вчера в 23:59` for `2017-05-06T23:59:59.999Z`', () => {          // валится каждый день
+        const actual = formatDate("2017-05-06T23:59:59.999Z");
 
         assert.equal(actual, "вчера в 23:59");
     });

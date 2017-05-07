@@ -16,6 +16,7 @@ describe('showTweets tests', () =>{
     });
 
 
+    
     it('should print tweets', done =>{
 
         var tweets = [
@@ -50,9 +51,9 @@ describe('showTweets tests', () =>{
         });
 
         showTweets(() => {
-            assert(log.calledOnce);
+            assert(log.calledTwice);
             assert(log.calledWith(expDates[0] + '\n' + tweets[0].text));
-            //assert(log.calledWith(expDates[1] + '\n' + tweets[1].text));
+            assert(log.calledWith(expDates[1] + '\n' + tweets[1].text));
             assert(!error.called);
             done();
         });
@@ -68,7 +69,7 @@ describe('showTweets tests', () =>{
 
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
-            .replyWithError({code: 303, error: "fuck you"});
+            .replyWithError({code: 303, message: 'Having fun now! Do not disturb!!!'});
 
         var formatDateShadow = sinon.stub();
 
@@ -80,7 +81,7 @@ describe('showTweets tests', () =>{
 
             assert(!log.called);
             assert(error.called);
-            //assert(error.calledWith('Having fun! Do not disturb!!!'));
+            assert(error.calledWith('Having fun now! Do not disturb!!!'));
             done();
         });
     });
@@ -102,7 +103,7 @@ describe('showTweets tests', () =>{
 
         showTweets(() => {
             assert(log.calledOnce);
-            //assert(log.calledWithMatch('statusCode: 309'));
+            assert(log.calledWithMatch('statusCode: 309'));
             assert(!error.called);
             done();
         });
@@ -125,7 +126,7 @@ describe('showTweets tests', () =>{
 
         showTweets(() => {
             assert(!log.called);
-            //assert(log.calledWith('statusCode: 308'));
+            assert(error.calledWith('Unexpected token m in JSON at position 1'));
             assert(error.calledOnce);
             done();
         });
