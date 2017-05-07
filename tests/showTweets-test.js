@@ -25,7 +25,7 @@ const formatDate = sinon.stub();
 let expectedDate_1 = '25 апреля в 20:09';
 let expectedDate_2 = '25 апреля 2016 года 20:09';
 
-formatDate.withArgs(mockTweets[0].created_at).returns(expectedDate_1);  // TODO: Через год тест рухнет
+formatDate.withArgs(mockTweets[0].created_at).returns(expectedDate_1);
 formatDate.withArgs(mockTweets[1].created_at).returns(expectedDate_2);
 
 const showTweets = proxyquire('../showTweets', {
