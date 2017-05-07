@@ -38,11 +38,11 @@ function formatDate(date) {
         return `${inputDate.getDate()} ${months[inputDate.getMonth()]} ${inputDate.getFullYear()} года в ${time}`
     }
 
-    if (now.getMonth() - inputDate.getMonth() > 0 || now.getDay() - inputDate.getDay() > 1) {
+    if (now.getMonth() - inputDate.getMonth() > 0 || now.getDate() - inputDate.getDate() > 1) {
         return `${inputDate.getDate()} ${months[inputDate.getMonth()]} в ${time}`
     }
 
-    if (now.getDay() - inputDate.getDay() === 1) {
+    if (now.getDate() - inputDate.getDate() === 1) {
         return `вчера в ${time}`
     }
 
