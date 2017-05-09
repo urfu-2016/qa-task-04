@@ -17,7 +17,8 @@ const mockTweets = [
 
 function nockTwitterAPI(statusCode, mock) {
   nock('https://api.twitter.com')
-    .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+    .get('/1.1/search/tweets.json')
+    .query({ q: '#urfu-testing-2016' })
     .reply(statusCode, typeof mock == 'string' ? mock : JSON.stringify(mock));
 }
 
@@ -67,6 +68,18 @@ describe('showTweets', () => {
         assert(stdout.callCount, stdoutRes.length);
       });
       clock.tick(30000);
+    });
+    it('should not write if empty tweet list', async () => {
+      nockTwitterAPI(200, []);
+      const stdout = sinon.spy(process.stdout, 'write');
+      const formatDate = sinon.stub();
+      const showTweets = proxyquire('../showTweets', {
+        './formatDate': formatDate,
+      });
+      showTweets().then(()=> {
+        const stdoutRes = []
+        assert(stdout.callCount, stdoutRes.length);
+      });
     });
   });
   describe('exceptions', () => {
