@@ -54,7 +54,7 @@ describe('showTweets', () => {
         });
     });
 
-    it('should print error message for json without "created_at" and "text" fields', () => {
+    it('should not print tweets without "created_at" and "text" fields', () => {
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
             .reply(200, [{"field":""}]);
@@ -62,7 +62,7 @@ describe('showTweets', () => {
             './formatDate': formatDate
         });
         showTweets(() => {
-            assert(error.calledOnce);
+            assert(!error.called);
             assert(!log.called);
         });
     });

@@ -15,8 +15,10 @@ function showTweets() {
         try {
             const tweets = JSON.parse(body);
             tweets.forEach(function (tweet) {
-                console.log(formatDate(tweet['created_at']));
-                console.log(tweet['text']);
+                if ((tweet.hasOwnProperty('created_at')) && (tweet.hasOwnProperty('text'))) {
+                    console.log(formatDate(tweet['created_at']));
+                    console.log(tweet['text']);
+                }
             });
         } catch (parseError) {
             console.error(parseError);
