@@ -67,6 +67,19 @@ describe('showTweets', () => {
         });
     });
 
+    it('should print error message for invalid json', () => {
+        nock('https://api.twitter.com')
+            .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+            .reply(200, 'not a json');
+        const showTweets = proxyquire('../showTweets', {
+            './formatDate': formatDate
+        });
+        showTweets(() => {
+            assert(error.calledOnce);
+            assert(!log.called);
+        });
+    });
+
     it('should print dates and texts of all tweets', () => {
         formatDate.withArgs(tweets[0].created_at).returns('25 апреля в 20:09');
         formatDate.withArgs(tweets[1].created_at).returns('25 апреля 2016 в 20:09');
