@@ -3,8 +3,7 @@
 const assert = require('assert');
 const nock = require('nock');
 const sinon = require('sinon');
-
-const showTweets = require('../showTweets');
+const proxyQuire = require('proxyquire');
 
 describe('showTweets', () => {
     let log = null;
@@ -28,6 +27,17 @@ describe('showTweets', () => {
     });
 
     it('should load and log tweets', async () => {
+        const formatDateStub = sinon.stub();
+
+        formatDateStub.withArgs('2017-04-25T15:09:10.609Z')
+            .returns('25 апреля в 15:09');
+        formatDateStub.withArgs('2016-04-25T15:09:10.609Z')
+            .returns('25 апреля 2016 года в 15:09');
+
+        const showTweets = proxyQuire('../showTweets', {
+            './formatDate': formatDateStub
+        });
+
         const expected = [
             '25 апреля в 15:09\n"text1"',
             '25 апреля 2016 года в 15:09\n"text2"'
@@ -35,8 +45,10 @@ describe('showTweets', () => {
 
         await showTweets();
 
-        for (const expectedString of expected) {
-            assert(log.calledWith(expectedString))
+        assert.equal(log.callCount, expected.length);
+
+        for (const [index, expectedString] of expected.entries()) {
+            assert(log.getCall(index).calledWith(expectedString));
         }
     });
 
