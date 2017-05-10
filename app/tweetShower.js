@@ -9,41 +9,36 @@ const ACCESS_TOKEN = 'Hardcode here your access token';
 /**
  * Function searches tweets by FAVORITE_HASHTAG and print it to console.
  */
-function showTweets() {
+function show() {
     return prepareTweets()
             .then(console.log)
             .catch(() => console.error('Failed to load tweets'));
 }
 
-
 /**
  * Function searches tweets by FAVORITE_HASHTAG and print it to console
- * by one word in 200ms
+ * char by char. One char in `interval` ms
+ * @param {Number} 
  */
-function showTweetsTicker() {
-    return new Promise((resolve, reject) => {
-        prepareTweets()
-            .then(tweetsString => {
-                let words = tweetsString.split(/\n| /);
-                printByInterval(words, 200, resolve);
-            })
-            .catch(reject); 
-    })
-    .catch(() => console.error('Failed to load tweets'));
+function showCharByChar(interval) {
+    return prepareTweets()
+            .then(tweets => printCharByChar(tweets, interval))
+            .catch(() => console.error('Failed to load tweets')); 
 }
 
-
-function printByInterval(words, interval, done) {
-    let wordIndex = 0;
-    function printNext() {
-        if (wordIndex < words.length) {
-            console.log(words[wordIndex++]);
-            setTimeout(printNext, interval); 
-        } else {
-            done();
+function printCharByChar(str, interval) {
+    return new Promise(resolve => {
+        let charIndex = 0;
+        function printNext() {
+            if (charIndex < str.length) {
+                process.stdout.write(str[charIndex++]);
+                setTimeout(printNext, interval); 
+            } else {
+                resolve();
+            }
         }
-    }
-    printNext();
+        printNext();
+    });
 }
 
 function prepareTweets() {
@@ -52,7 +47,6 @@ function prepareTweets() {
             .then(tweets => tweets.join('\n\n'));
 }
 
-
 function stringifyReadable(tweet) {
     let createdDate = formatDate(new Date(tweet['created_at']));
     let text = tweet['text'];
@@ -60,5 +54,5 @@ function stringifyReadable(tweet) {
     return createdDate + '\n' + text;
 }
 
-module.exports.showTweets = showTweets;
-module.exports.showTweetsTicker = showTweetsTicker;
+module.exports.show = show;
+module.exports.showCharByChar = showCharByChar;
