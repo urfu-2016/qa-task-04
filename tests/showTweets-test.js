@@ -34,10 +34,7 @@ const showTweets = proxyquire('../showTweets', {
 
 describe('showTweets tests', () => {
     afterEach(() => {
-        nock.cleanAll()
-    });
-
-    afterEach(() => {
+        nock.cleanAll();
         console.log.restore();
     });
 
