@@ -2,25 +2,25 @@ const MONTHS = ['января', 'февраля', 'марта', 'апреля', 
                 'августа', 'сентября','октября', 'ноября', 'декабря']
 
 function formatDate(date) {
-   const newDate = new Date();
+  const newDate = new Date();
   if (arguments.length !== 1)
-	throw new Error('Неверное число аргументов');
-  if (date.toString() === 'Invalid Date')
-	throw new Error('Переданный аргумент не формата Date');
-  if (newDate < date)
-	throw new Error('Дата должна быть до текущей даты');
-	const newTime = `${date.getHours()}:${date.getMinutes()}`;
-	const newDay =	`${date.getDate()} ${MONTHS[date.getMonth()-1]}`;
-	const newDayWithYear = `${newDay} ${date.getFullYear()} года в ${newTime}`;
+    throw new Error('Неверное число аргументов');
+  var dateFormat = new Date(date);
+  if (dateFormat.toString() === 'Invalid Date')
+    throw new Error('Переданный аргумент не формата Date');
+  if (newDate < dateFormat)
+    throw new Error('Дата должна быть до текущей даты');
+	const newTime = `${dateFormat.getHours()}:${dateFormat.getMinutes()}`;
+	const newDay = `${dateFormat.getDate()} ${MONTHS[dateFormat.getMonth()-1]}`;
 
-  if (date.toDateString() == newDate.toDateString())
-	return newTime;
-  if (isYesterday(newDate, date))
-	return `вчера в ${newTime}`;
-  if (newDate.getFullYear() === date.getFullYear())
-	return `${newDay} в ${newTime}`;
+  if (dateFormat.toDateString() == newDate.toDateString())
+    return newTime;
+  if (isYesterday(newDate, dateFormat))
+    return `вчера в ${newTime}`;
+  if (newDate.getFullYear() === dateFormat.getFullYear())
+    return `${newDay} в ${newTime}`;
 
-  return newDayWithYear;
+  return `${newDay} ${dateFormat.getFullYear()} года в ${newTime}`;
 }
 
 function isYesterday(newDate, date) {
