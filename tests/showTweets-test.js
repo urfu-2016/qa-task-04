@@ -2,6 +2,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 const nock = require('nock');
+const showTweets = require('../showTweets');
 
 const tweets = [
     {
@@ -15,17 +16,17 @@ const tweets = [
 ];
 
 describe('showTweets', () => {
+    beforeEach(() => {
+        log = sinon.spy(console, 'log');
+        error = sinon.spy(console, 'error');
+    });
     afterEach(() => {
         console.log.restore();
         console.error.restore();
         nock.cleanAll();
-        // clock.restore();
     });
     describe('good data', () => {
-
-        it('display tweets on the console', done => {
-            const log = sinon.spy(console, 'log');
-            const error = sinon.spy(console, 'error');
+        it('should display tweets on the console', done => {
             const formatDate = sinon.stub();
             formatDate.withArgs(tweets[0].created_at).returns('вчера в 15:09');
             formatDate.withArgs(tweets[1].created_at).returns('25 мая 2016 года в 15:10');
@@ -48,65 +49,47 @@ describe('showTweets', () => {
                 assert(log.calledWith('25 мая 2016 года в 15:10\n"Для подмены модулей раньше я использовал #mockery, ' +
                     'а сейчас всей душой полюбил #proxyquire. #urfu-testing-2016"'));
                 assert(!error.called);
-
                 done();
             });
         });
     });
 
     describe('bad data', () => {
-        it('should throw error when nothing was returned', done => {
-            const log = sinon.spy(console, 'log');
-            const error = sinon.spy(console, 'error');
-            nock('https://api.twitter.com')
-                .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
-                .reply(200, null);
-            const showTweets = require('../showTweets');
-            showTweets(() => {
-                assert(!log.called);
-                assert(error.calledOnce);
-                done();
-            });
-        });
-
-        it('should throw error when parsing error', done => {
-            const log = sinon.spy(console, 'log');
-            const error = sinon.spy(console, 'error');
+        it('should log error when invalid data received', done => {
             const incorrectJSON = '[{"parsing error":"PARSING ERROR"}';
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .reply(200, incorrectJSON);
-            const showTweets = require('../showTweets');
+
             showTweets(() => {
                 assert(!log.called);
                 assert(error.calledOnce);
+                assert(error.calledWith('invalid data received'));
                 done();
             });
         });
 
-        it('should throw error when request error', done => {
-            const log = sinon.spy(console, 'log');
-            const error = sinon.spy(console, 'error');
+        it('should log error when request error', done => {
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .replyWithError('request error');
-            const showTweets = require('../showTweets');
+
             showTweets(() => {
                 assert(!log.called);
                 assert(error.calledOnce);
+                assert(error.calledWith('request error'));
                 done();
             });
         });
-        it('should throw error when status code is not 200', done => {
-            const log = sinon.stub(console, 'log');
-            const error = sinon.stub(console, 'error');
+        it('should log error when status code is not 200', done => {
             nock('https://api.twitter.com')
                 .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
                 .reply(502, '');
-            const showTweets = require('../showTweets');
+
             showTweets(() => {
                 assert(!log.called);
                 assert(error.calledOnce);
+                assert(error.calledWith('status code error'));
                 done();
             });
         });

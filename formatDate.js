@@ -1,3 +1,7 @@
+function getFormattedTime(date){
+    return `${('0'+date.getHours()).slice(-2)}:${('0'+date.getMinutes()).slice(-2)}`;
+}
+
 function formatDate(date) {
     // Напишите код форматирования даты в этом месте
     date = new Date(date);
@@ -25,15 +29,15 @@ function formatDate(date) {
 
 
     if (isToday)
-        formattedDate = `${date.getHours()}:${('0'+date.getMinutes()).slice(-2)}`;
+        formattedDate = getFormattedTime(date);
     else if (isYesterday)
-        formattedDate = `вчера в ${date.getHours()}:${('0'+date.getMinutes()).slice(-2)}`;
+        formattedDate = `вчера в ${getFormattedTime(date)}`;
     else if (isThisYear)
         formattedDate =  `${date.getDate()} ${months[date.getMonth()]}`+
-            ` в ${date.getHours()}:${('0'+date.getMinutes()).slice(-2)}`;
+            ` в ${getFormattedTime(date)}`;
     else
         formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${(date.getFullYear())} года` +
-            ` в ${date.getHours()}:${('0'+date.getMinutes()).slice(-2)}`;
+            ` в ${getFormattedTime(date)}`;
     return formattedDate;
 }
 

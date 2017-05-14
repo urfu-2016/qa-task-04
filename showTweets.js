@@ -9,24 +9,23 @@ const url = 'https://api.twitter.com/1.1/search/tweets.json?q=%23urfu-testing-20
 function showTweets(cb) {
     request(url, (requestError, res, body) => {
         if (requestError) {
-            console.error(requestError);
+            console.error('request error');
             cb();
             return;
         } else if (res.statusCode !== 200) {
-            console.error(res.status);
+            console.error('status code error');
             cb();
             return;
         }
+        let tweets = null;
         try {
-            const tweets = JSON.parse(body);
-            tweets.forEach((tweet) => {
-
+            tweets = JSON.parse(body);
+            tweets.forEach(tweet => {
                 let result = `${formatDate(tweet.created_at)}\n"${tweet.text}"`;
                 console.log(result);
-
             });
-        } catch (parseError) {
-            console.error(parseError);
+        } catch (Error) {
+            console.error('invalid data received');
         }
         cb();
     });
