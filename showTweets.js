@@ -13,7 +13,7 @@ function showTweets(cb) {
             cb();
             return;
         } else if (res.statusCode !== 200) {
-            console.error(res.status);
+            console.error("API ответил с кодом " + res.status);
             cb();
             return;
         }
