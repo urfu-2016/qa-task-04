@@ -3,47 +3,50 @@ const MONTHS = ['января', 'февраля', 'марта', 'апреля', 
                     'октября', 'ноября', 'декабря'];
 
 function formatDate(date) {
-    const chooseDate = new Date(date);
+    const pastDate = new Date(date);
     const todayDate = new Date();
 
-    if (chooseDate.toString() === 'Invalid Date' ||
-        todayDate.toString() === 'Invalid Date') {
+    if (pastDate.toString() === 'Invalid Date') {
         throw new TypeError('Date should not invalid');
     }
-    const chooseTime = `${chooseDate.getHours()}:${chooseDate.getMinutes()}`;
-    const chooseDay =  `${chooseDate.getDate()} ${MONTHS[chooseDate.getMonth()]}`;
-    const chooseFullDate = `${chooseDay} ${chooseDate.getFullYear()} года в ${chooseTime}`;
+    const chooseTime = `${padZero(pastDate.getHours())}:${padZero(pastDate.getMinutes())}`;
+    const chooseDay =  `${pastDate.getDate()} ${MONTHS[pastDate.getMonth()]}`;
+    const chooseFullDate = `${chooseDay} ${pastDate.getFullYear()} года в ${chooseTime}`;
 
-    if (chooseDate > todayDate) {
+    if (pastDate > todayDate) {
         throw new RangeError('Choose date should be earlier today');
     }
 
-    if (isToday(chooseDate, todayDate)) {
+    if (isToday(pastDate, todayDate)) {
         return chooseTime;
     }
 
-    if (isYesterday(chooseDate, todayDate)) {
+    if (isYesterday(pastDate, todayDate)) {
         return `вчера в ${chooseTime}`;
     }
 
-    if (isThisYear(chooseDate, todayDate)) {
+    if (isThisYear(pastDate, todayDate)) {
         return `${chooseDay} в ${chooseTime}`;
     }
 
     return chooseFullDate;
 }
 
-function isToday(chooseDate, todayDate) {
-    return chooseDate.toDateString() === todayDate.toDateString();
+function padZero(timeElement) {
+    return timeElement < 10 ? '0' + timeElement : timeElement;
 }
 
-function isYesterday(chooseDate, todayDate) {
+function isToday(pastDate, todayDate) {
+    return pastDate.toDateString() === todayDate.toDateString();
+}
+
+function isYesterday(pastDate, todayDate) {
     todayDate.setDate(todayDate.getDate() - 1);
-    return isToday(chooseDate, todayDate);
+    return isToday(pastDate, todayDate);
 }
 
-function isThisYear(chooseDate, todayDate) {
-    return chooseDate.getFullYear() == todayDate.getFullYear();
+function isThisYear(pastDate, todayDate) {
+    return pastDate.getFullYear() == todayDate.getFullYear();
 }
 
 

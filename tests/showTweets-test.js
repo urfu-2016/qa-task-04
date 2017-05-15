@@ -38,4 +38,43 @@ describe('showTweets', () => {
             });
     });
 
+    it('should print error if json is incorrect', () => {
+        nock('https://api.twitter.com')
+            .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+            .reply(200, 'invalidJSON');
+
+        const formatDate = sinon.stub();
+        const showTweets = proxyquire('../showTweets', {
+            './formatDate': formatDate
+        });
+
+        const log = sinon.spy(console, 'log');
+        const error = sinon.spy(console, 'error');
+
+        return showTweets()
+            .then(() => {
+                assert(!log.called);
+                assert(error.calledOnce);
+        });
+    });
+
+    it('should print error if statusCode is not 200', () => {
+        nock('https://api.twitter.com')
+            .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+            .reply(404, EXAMPLE_TWEETS);
+
+        const formatDate = sinon.stub();
+        const showTweets = proxyquire('../showTweets', {
+            './formatDate': formatDate
+        });
+
+        const log = sinon.spy(console, 'log');
+        const error = sinon.spy(console, 'error');
+
+        return showTweets()
+            .then(() => {
+                assert(!log.called);
+                assert(error.calledOnce);
+            });
+    });
 });

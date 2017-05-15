@@ -4,7 +4,7 @@ const nock = require('nock');
 
 
 function printTweet(tweet) {
-    console.log(formatDate(tweet['created_at']));
+    console.log(formatDate(tweet.created_at));
     console.log(tweet['text']);
 }
 
@@ -16,7 +16,8 @@ function showTweets() {
 
     return rp(options)
         .then(JSON.parse)
-        .then(x => x.forEach(printTweet));
+        .then(response => response.forEach(printTweet))
+        .catch(error => console.error(error));
 }
 
 module.exports = showTweets;
