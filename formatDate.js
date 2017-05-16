@@ -25,13 +25,12 @@ function formatDate(date) {
     if (dateFromString.toString() === 'Invalid Date') {
         throw new Error('Неверный формат даты');
     }
-    const today = new Date(currentMoment);
+    const today = new Date();
     today.setHours(0);
     today.setMinutes(0);
     today.setSeconds(0);
     today.setMilliseconds(0);
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterday = (date => new Date(date.setDate(date.getDate() - 1)))(new Date);
     if (dateFromString  > currentMoment) {
         throw new Error('Дата ещё не нступила');
     } else if (dateFromString >= today) {
@@ -47,17 +46,26 @@ function formatDate(date) {
                 getHoursAndMinutes(dateFromString);
 }
 
+// Структура для кэширования значения, возвращаемого getHoursAndMinutes
+const cache = {};
+
 /**
  * Возвращает представление даты в часах и минутах
  * @param {Date} date
  */
 function getHoursAndMinutes(date) {
-    return (date.getHours() > 9 ?
-        date.getHours() : '0' +
-        date.getHours()) + ':' +
-        (date.getMinutes() > 9 ?
-            date.getMinutes() : '0' +
-            date.getMinutes());
+    if (cache.hasOwnProperty(date)) {
+        return cache[date];
+    } else {
+        const result = (date.getHours() > 9 ?
+                date.getHours() : '0' +
+                date.getHours()) + ':' +
+            (date.getMinutes() > 9 ?
+                date.getMinutes() : '0' +
+                date.getMinutes());
+        cache[date] = result;
+        return result;
+    }
 }
 
 module.exports = formatDate;
