@@ -4,12 +4,14 @@
   "description": "Задача «Консольный твиттер»",
   "main": "showTweets.js",
   "scripts": {
-    "test": "mocha tests",
-    "cover": "istanbul cover ./node_modules/.bin/_mocha tests --report text-summary"
+    "lint": "eslint .",
+    "test": "eslint . && mocha tests",
+    "cover": "istanbul cover ./node_modules/mocha/bin/_mocha tests --report text-summary"
   },
   "author": "Sergey Zhigalov <zhigalov@yandex-team.ru>",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^3.19.0",
     "istanbul": "0.4.5",
     "mocha": "3.3.0",
     "nock": "9.0.13",
