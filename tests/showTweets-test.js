@@ -44,10 +44,10 @@ describe('showTweets', ()=> {
 
         showTweets(() => {
             assert.equal(log.callCount, 4);
-            assert(log.calledWith('вчера в 20:09'));
-            assert(log.calledWith('Some text 1'));
-            assert(log.calledWith('4 мая 2016 года в 20:09'));
-            assert(log.calledWith('Some text 2'));
+            assert.equal(log.firstCall.args[0], 'вчера в 20:09');
+            assert.equal(log.secondCall.args[0], 'Some text 1');
+            assert.equal(log.thirdCall.args[0], '4 мая 2016 года в 20:09');
+            assert.equal(log.getCall(3).args[0], 'Some text 2');
             done();
         });
     });
@@ -86,7 +86,7 @@ describe('showTweets', ()=> {
         });
     });
 
-    it('не должен выводить что-либо, когда нет твитов', done => {
+    it('не должен выводить ничего, когда нет твитов', done => {
         const log = sinon.spy(console, 'log');
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
