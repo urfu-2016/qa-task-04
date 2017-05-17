@@ -54,9 +54,10 @@ describe('formatDate tests', () => {
     });
 
     it('should return full date', () => {
+        date.setMinutes(date.getMinutes() - 25);
         date.setFullYear(date.getFullYear() - 1);
 
-        assert.equal(formatDate(date.toISOString()), '3 мая 2016 года в 12:30');
+        assert.equal(formatDate(date.toISOString()), '3 мая 2016 года в 12:05');
     });
 
     after(() => {
