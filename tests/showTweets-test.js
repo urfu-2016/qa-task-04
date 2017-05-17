@@ -52,8 +52,8 @@ describe('showTweets tests', () => {
         await showTweets();
 
         assert(log.calledTwice);
-        assert(log.calledWith(`${parsedMockTweets[0].created_at}\n${parsedMockTweets[0].text}`));
-        assert(log.calledWith(`${parsedMockTweets[1].created_at}\n${parsedMockTweets[1].text}`));
+        assert(log.firstCall.calledWith(`${parsedMockTweets[0].created_at}\n${parsedMockTweets[0].text}`));
+        assert(log.secondCall.calledWith(`${parsedMockTweets[1].created_at}\n${parsedMockTweets[1].text}`));
     });
 });
 

@@ -1,23 +1,10 @@
 'use strict';
 
 const assert = require('assert');
+const sinon = require('sinon');
 
 const formatDate = require('../formatDate');
 
-const months = [
-    'января',
-    'февраля',
-    'марта',
-    'апреля',
-    'мая',
-    'июня',
-    'июля',
-    'августа',
-    'сентября',
-    'октября',
-    'ноября',
-    'декабря',
-];
 
 describe('formatDate exception tests', () => {
     it('should return exception when call without argument', () => {
@@ -41,36 +28,38 @@ describe('formatDate exception tests', () => {
 });
 
 describe('formatDate tests', () => {
-    let todayDate = new Date(Date.now());
-    let minutes = todayDate.getMinutes() < 10 ? '0' + todayDate.getMinutes() : todayDate.getMinutes();
-    let time = `${todayDate.getHours()}:${minutes}`;
+    let clock;
+    let date;
+
+    before(() => {
+        clock = sinon.useFakeTimers(new Date(2017, 4, 5, 12, 30));
+        date = new Date();
+    });
+
 
     it('should return short today date', () => {
-        assert.equal(formatDate(todayDate.toISOString()), time);
+        assert.equal(formatDate(date.toISOString()), '12:30');
     });
 
     it('should return short date with "yesterday" word', () => {
-        todayDate.setDate(todayDate.getDate() - 1);
+        date.setDate(date.getDate() - 1);
 
-        assert.equal(formatDate(todayDate.toISOString()), `вчера в ${time}`);
+        assert.equal(formatDate(date.toISOString()), 'вчера в 12:30');
     });
 
     it('should return short date with date num', () => {
-        todayDate.setDate(todayDate.getDate() - 1);
+        date.setDate(date.getDate() - 1);
 
-        let date = todayDate.getDate();
-        let month = months[todayDate.getMonth()];
-
-        assert.equal(formatDate(todayDate.toISOString()), `${date} ${month} в ${time}`);
+        assert.equal(formatDate(date.toISOString()), '3 мая в 12:30');
     });
 
     it('should return full date', () => {
-        todayDate.setFullYear(todayDate.getFullYear() - 1);
+        date.setFullYear(date.getFullYear() - 1);
 
-        let date = todayDate.getDate();
-        let month = months[todayDate.getMonth()];
-        let year = todayDate.getFullYear();
+        assert.equal(formatDate(date.toISOString()), '3 мая 2016 года в 12:30');
+    });
 
-        assert.equal(formatDate(todayDate.toISOString()), `${date} ${month} ${year} года в ${time}`);
+    after(() => {
+        clock.restore();
     });
 });
