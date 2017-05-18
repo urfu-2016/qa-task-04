@@ -57,17 +57,17 @@ describe('formatDate', () => {
 		today.restore();
     });
 	
-	it('should return `На входе должен быть один аргумент типа Date` for "(date, date)"', () => {
+	it('should return `На входе должен быть один аргумент` for "(date, date)"', () => {
 		const date1 =  formatDate(new Date(2017, 2, 3, 0, 0, 0, 0));
 		const date2 =  formatDate(new Date(2016, 2, 3, 0, 0, 0, 0));
         const date = () => formatDate(date1, date2);
         
-        assert.throws(date, /На входе должен быть один аргумент типа Date/);
+        assert.throws(date, /На входе должен быть один аргумент/);
     });
 	
-	it('should return `На входе должен быть один аргумент типа Date` for "()"', () => {
+	it('should return `На входе должен быть один аргумент` for "()"', () => {
         const date = () => formatDate();
         
-        assert.throws(date, /На входе должен быть один аргумент типа Date/);
+        assert.throws(date, /На входе должен быть один аргумент/);
     });
 });

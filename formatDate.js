@@ -10,7 +10,7 @@ function formatDate(date) {
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
     if (arguments.length !== 1) {
-        throw new Error("На входе должен быть один аргумент типа Date")
+        throw new Error("На входе должен быть один аргумент")
     }
     if (!(date instanceof Date)) {
         throw new Error('Аргумент должен быть типа Date');
@@ -21,26 +21,24 @@ function formatDate(date) {
     if (date > today) {
         throw new Error('Дата не должна быть больше текущей');
     }
+	const time = pad(date.getHours()) + ":" + pad(date.getMinutes());
     if (today.toDateString() === inputDate.toDateString()) {
-        return getTimeWithZero(date.getHours()) + ":" + getTimeWithZero(date.getMinutes());
+        return time;
     }
     if (date.toDateString() === yesterday.toDateString()) {
-        return "вчера в " + getTimeWithZero(date.getHours()) + ":" + getTimeWithZero(date.getMinutes());
+        return "вчера в " + time;
     }
     if (date.getFullYear() === today.getFullYear()) {
-        return date.getDate() + " " + MONTHS[date.getMonth()] + " в " + getTimeWithZero(date.getHours()) +
-        ":" + getTimeWithZero(date.getMinutes());
+        return date.getDate() + " " + MONTHS[date.getMonth()] + " в " + time;
     }
     else {
         return date.getDate() + " " + MONTHS[date.getMonth()] + " " + date.getFullYear() + 
-        " года в " + getTimeWithZero(date.getHours()) + ":" + getTimeWithZero(date.getMinutes());
+        " года в " + time;
     }
 }
 
-function getTimeWithZero(time) {
-    if (time < 10) 
-        return '0' + time;
-    else return time;
+function pad(time) {
+    return ('0' + time).slice(-2);
 }
 
 module.exports = formatDate;
