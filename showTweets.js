@@ -8,21 +8,28 @@ function formatTweet(body) {
     return `${formatDate(new Date(body.created_at))}\n${body.text}`;
 }
 
-function showTweets() {
+function showTweets(cb) {
     request(url, (error, response, body) => {
         if (error) {
-            console.error(error);
+            console.error(error.message);
+            return cb(error.message);
         }
         else if (response.statusCode !== 200) {
             console.error(response.statusCode);
+            return cb(response.statusCode);
         }
         else {
             try {
                 let tweets = JSON.parse(body);
-                tweets.forEach(tweet => console.log(formatTweet(tweet)));
+                let formattedTweets = tweets
+                    .map(tweet => formatTweet(tweet))
+                    .join('\n');
+                console.log(formattedTweets);
+                return cb(null, formattedTweets);
             }
             catch (error) {
-                console.error(error);
+                console.error('Parse error');
+                return cb('Parse error')
             }
         }
     });

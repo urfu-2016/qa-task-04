@@ -35,4 +35,7 @@ function getFormattedNumber(num) {
     return num < 10 ? `0${num}` : num.toString();
 }
 
-module.exports = formatDate;
+module.exports = {
+    formatDate: formatDate,
+    getFormattedNumber: getFormattedNumber
+};

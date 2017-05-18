@@ -26,12 +26,14 @@ describe('showTweets', () => {
         consoleLog = sinon.spy(console, 'log');
         consoleError = sinon.spy(console, 'error');
         formatDate = sinon.stub();
+        formatDate.withArgs(new Date('2017-04-25T15:09:10.609Z')).returns('25 апреля в 15:09');
+        formatDate.withArgs(new Date('2016-04-25T15:09:10.609Z')).returns('25 апреля 2016 года в 15:09');
         showTweets = proxyquire('../showTweets', {
             './formatDate': formatDate
         });
     });
 
-    it('should print tweets on console', () => {
+    it('should print tweets on console', done => {
         const expected = `25 апреля в 15:09\n${TWEETS[0].text}\n25 апреля 2016 года в 15:09\n${TWEETS[1].text}`;
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
@@ -39,10 +41,11 @@ describe('showTweets', () => {
 
         showTweets(() => {
             assert(consoleLog.calledWith(expected));
+            done();
         });
     });
 
-    it('should print error on console if json is incorrect', () => {
+    it('should print error on console if json is incorrect', done => {
         const invalidJSON = 'invalidJSON';
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
@@ -51,23 +54,26 @@ describe('showTweets', () => {
         showTweets(() => {
             assert(!consoleLog.called);
             assert(consoleError.calledOnce);
+            assert(consoleError.calledWith('Parse error'));
+            done();
         });
     });
 
-    it('should print error on console if statusCode is not 200', () => {
+    it('should print error on console if statusCode is not 200', done => {
         let code = 404;
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
-            .reply(code, TWEETS);
+            .reply(code);
 
         showTweets(() => {
             assert(!consoleLog.called);
             assert(consoleError.calledOnce);
             assert(consoleError.calledWith(code));
+            done();
         });
     });
 
-    it('should print error on console if request error', () => {
+    it('should print error on console if request error', done => {
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
             .replyWithError('request error');
@@ -75,6 +81,8 @@ describe('showTweets', () => {
         showTweets(() => {
             assert(!consoleLog.called);
             assert(consoleError.calledOnce);
+            assert(consoleError.calledWith('request error'));
+            done()
         });
     });
 
