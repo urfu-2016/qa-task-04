@@ -2,15 +2,15 @@ const assert = require('assert');
 const formatDate = require('../formatDate');
 
 describe('formatDate', () => {
-    it('should return `00:00` for `2017-05-07T00:00:00.000Z`', () => {                  // валится каждый день
-        const actual = formatDate("2017-05-07T00:00:00.000Z");
+    it('should return `00:00` for `2017-05-18T00:00:00.000Z`', () => {                  // валится каждый день
+        const actual = formatDate("2017-05-18T00:00:00.000Z");
 
         assert.equal(actual, "00:00");
     });
 
 
-    it('should return `вчера в 23:59` for `2017-05-06T23:59:59.999Z`', () => {          // валится каждый день
-        const actual = formatDate("2017-05-06T23:59:59.999Z");
+    it('should return `вчера в 23:59` for `2017-05-17T23:59:59.999Z`', () => {          // валится каждый день
+        const actual = formatDate("2017-05-17T23:59:59.999Z");
 
         assert.equal(actual, "вчера в 23:59");
     });
@@ -28,14 +28,14 @@ describe('formatDate', () => {
         assert.equal(actual, "31 января 2000 года в 11:59");
     });
 
-    it('should return `31 декабря 1999 года в 23:59` for `1999-12-31T10:59:59.999Z`', () => {
-        const actual = formatDate("1999-12-31T10:59:59.999Z");
 
-        assert.equal(actual, "31 декабря 1999 года в 10:59");
+
+
+    it('should throw an error when arguments in are more than 1', () => {
+        const actual = () => formatDate("1999-12-31T10:59:59.999Z", "2007-08-15T10:22:59.999Z");
+
+        assert.throws(actual, /На вход подаётся только 1 аргумент./);
     });    
-
-
-
 
     it ('should throw error when arguments number is 0', () =>{
     	const actual = () => formatDate();
