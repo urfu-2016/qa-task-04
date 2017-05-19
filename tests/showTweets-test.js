@@ -33,7 +33,7 @@ describe('showTweets', () => {
         });
     });
 
-    it('should print tweets on console', done => {
+    it('should print tweets on console if tweets is Array', done => {
         const expected = `25 апреля в 15:09\n${TWEETS[0].text}\n25 апреля 2016 года в 15:09\n${TWEETS[1].text}`;
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
@@ -41,6 +41,46 @@ describe('showTweets', () => {
 
         showTweets(() => {
             assert(consoleLog.calledWith(expected));
+            done();
+        });
+    });
+
+    it('should print tweets on console if tweets is Object', done => {
+        const expected = `25 апреля в 15:09\n${TWEETS[0].text}`;
+        nock('https://api.twitter.com')
+            .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+            .reply(200, TWEETS[0]);
+
+        showTweets(() => {
+            assert(consoleLog.calledWith(expected));
+            done();
+        });
+    });
+
+    it('should throw error on console if json is null', done => {
+        nock('https://api.twitter.com')
+            .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+            .reply(200, null);
+        let expected = 'JSON should be Array or object';
+
+        showTweets(() => {
+            assert(consoleError.calledOnce);
+            assert(!consoleLog.called);
+            assert(consoleError.calledWith(expected));
+            done();
+        });
+    });
+
+    it('should throw error on console if json is not array and not object', done => {
+        nock('https://api.twitter.com')
+            .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
+            .reply(200, '"string"');
+        let expected = 'JSON should be Array or object';
+
+        showTweets(() => {
+            assert(consoleError.calledOnce);
+            assert(!consoleLog.called);
+            assert(consoleError.calledWith(expected));
             done();
         });
     });

@@ -20,12 +20,30 @@ function showTweets(cb) {
         }
         else {
             try {
-                let tweets = JSON.parse(body);
-                let formattedTweets = tweets
-                    .map(tweet => formatTweet(tweet))
-                    .join('\n');
-                console.log(formattedTweets);
-                return cb(null, formattedTweets);
+                const incorrectJSONErrorMessage = 'JSON should be Array or object';
+                if (!body) {
+                    console.error(incorrectJSONErrorMessage);
+
+                    return cb(incorrectJSONErrorMessage);
+                }
+                let data = JSON.parse(body);
+                if (Array.isArray(data)) {
+                    let formattedTweets = data
+                        .map(tweet => formatTweet(tweet))
+                        .join('\n');
+                    console.log(formattedTweets);
+
+                    return cb(null, formattedTweets);
+                } else if (data instanceof Object) {
+                    let tweet = formatTweet(data);
+                    console.log(tweet);
+
+                    return cb(null, tweet)
+                } else {
+                    console.error(incorrectJSONErrorMessage);
+
+                    return cb(incorrectJSONErrorMessage);
+                }
             }
             catch (error) {
                 console.error('Parse error');
