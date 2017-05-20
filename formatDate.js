@@ -1,4 +1,3 @@
-
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября',
     'октября', 'ноября', 'декабря'];
 
@@ -9,7 +8,7 @@ function formatDate(date) {
     yesterday.setDate(currentDate.getDate() - 1);
     date = new Date(date);
 
-    if (arguments.length !=1)
+    if (arguments.length !== 1)
         throw new Error('На вход должен подаваться только один параметр');
     if (date.toString() === 'Invalid Date')
         throw new Error('В качестве параметра должна передаваться корректная дата');

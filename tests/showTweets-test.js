@@ -19,8 +19,8 @@ describe('showTweets', () => {
     const formatDate = sinon.stub();
 
     beforeEach(() => {
-        log = sinon.spy(console, 'log');
-        error = sinon.spy(console, 'error');
+        log = sinon.stub(console, 'log');
+        error = sinon.stub(console, 'error');
     });
     afterEach(() => {
         console.log.restore();
@@ -28,7 +28,7 @@ describe('showTweets', () => {
         nock.cleanAll();
     });
 
-    it('should print error message when code is not 200', () => {
+    it('should print error message when code is not 200', done => {
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
             .reply(400, 'Bad Request');
@@ -38,10 +38,11 @@ describe('showTweets', () => {
         showTweets(() => {
             assert(error.calledWith(400));
             assert(!log.called);
+            done();
         });
     });
 
-    it('should print error message for failed request', () => {
+    it('should print error message for failed request', done => {
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
             .replyWithError('Bad Request');
@@ -51,10 +52,11 @@ describe('showTweets', () => {
         showTweets(() => {
             assert(error.calledWith('Bad Request'));
             assert(!log.called);
+            done();
         });
     });
 
-    it('should not print tweets without "created_at" and "text" fields', () => {
+    it('should not print tweets without "created_at" and "text" fields', done => {
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
             .reply(200, [{"field":""}]);
@@ -62,12 +64,13 @@ describe('showTweets', () => {
             './formatDate': formatDate
         });
         showTweets(() => {
-            assert(!error.called);
+            assert(error.calledWith('There are not required fields in tweet'));
             assert(!log.called);
+            done();
         });
     });
 
-    it('should print error message for invalid json', () => {
+    it('should print error message for invalid json', done => {
         nock('https://api.twitter.com')
             .get('/1.1/search/tweets.json?q=%23urfu-testing-2016')
             .reply(200, 'not a json');
@@ -77,10 +80,11 @@ describe('showTweets', () => {
         showTweets(() => {
             assert(error.calledOnce);
             assert(!log.called);
+            done();
         });
     });
 
-    it('should print dates and texts of all tweets', () => {
+    it('should print dates and texts of all tweets', done => {
         formatDate.withArgs(tweets[0].created_at).returns('25 апреля в 20:09');
         formatDate.withArgs(tweets[1].created_at).returns('25 апреля 2016 в 20:09');
         const showTweets = proxyquire('../showTweets', {
@@ -95,6 +99,7 @@ describe('showTweets', () => {
             assert(log.calledWith('25 апреля 2016 в 20:09'));
             assert(log.calledWith('Text 2'));
             assert(!error.called);
+            done();
         });
     });
 });
